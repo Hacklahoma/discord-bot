@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "lib": ["es6", "dom", "ES2015"],
+    "outDir": "build",
+    "experimentalDecorators": true, 
+  },
+  "include": ["src"],
+  "exclude":[
+      "node_modules",
+      "typings/main",
+      "typings/main.d.ts"
+  ],
+}

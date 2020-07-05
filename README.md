@@ -19,6 +19,6 @@ Next you will need to run `n stable` to get the latest stable version of node.js
 To run this project first run `npm install`.
 
 Before being able to run the bot, you will need to have 
-the config.json file that includes the bot's token.
+the .env file that includes the bot's token.
 
-To start this project, run `node .`
+To start this project, you will need to first build it run `npm run build`, and then run `npm run dev` to run the compiled bot. 

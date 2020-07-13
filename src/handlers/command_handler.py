@@ -1,4 +1,6 @@
 #Command Handler
+from os.path import dirname, basename, isfile, join
+import glob
 
 class CommandHandler:
 
@@ -8,6 +10,14 @@ class CommandHandler:
 
     #Store commands
     self.commands = []
+
+    #Load Commands from directory
+    #commandFiles = glob.glob(join(dirname(__file__), "*.py"))
+    #print(commandFiles)
+
+    #__all__ = [ basename(f)[:-3] for f in commandFiles if isfile(f) and not f.endswith('__init__.py')]
+
+
 
   #Add commands to the array
   def addCommand(self, command):

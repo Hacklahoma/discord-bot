@@ -2,20 +2,23 @@
 
 This project holds the code for a bot for the Hacklahoma Event Discord.
 
-This project is made with [discord.py](https://pypi.org/project/discord.py/).
+This project is made with [node.js](https://nodejs.org/) and [discord.js](https://discord.js.org/).
 
-## Programs needed
+## Upgrading Node.js
 
-You will need `python3` and `pip3` in order to install the dependencies needed. Installing these will heavily depend on what operating system you are using. 
+In order to use discord.js, you will need to make sure your version of node.js is v12 or greater.
 
-## Insalling dependencies
+You can check your version of node.js by running `node -v`.
 
-You will need to install `discord.py` and `python-dotenv`
+In order to upgrade node.js, first install `n` by running `npm install n -g`.
+Next you will need to run `n stable` to get the latest stable version of node.js.
 
-Install both of these in one line by running `python3 -m pip install -U discord.py python-dotenv`. 
-
-An installation guide for `discord.py` can also be found [here](https://discordpy.readthedocs.io/en/latest/intro.html).
 
 ## Running the Project.
 
-To run this project you can either use the run shell script that is provided by typing `./run.sh` or by running `python3 src/run.sh`
+To run this project first run `npm install`.
+
+Before being able to run the bot, you will need to have 
+the .env file that includes the bot's token.
+
+To start this project, you will need to first build it run `npm run build`, and then run `npm run dev` to run the compiled bot. 

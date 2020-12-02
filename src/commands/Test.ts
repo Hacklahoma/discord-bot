@@ -13,8 +13,6 @@ export class Test extends Command {
 
   // Execute the command
   async execute(message: Message, args: string[]): Promise<void> {
-    await message.react('');
     await message.channel.send(`Hi ${args[0]}! I'm dad!`);
-
   }
 }

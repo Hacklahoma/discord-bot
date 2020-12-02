@@ -1,16 +1,8 @@
-import {Client, Message} from 'discord.js';
+// Main Application File
 require('dotenv').config();
+import {Bot} from './Bot';
 
-var client: Client = new Client();
-
-client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}`);
-});
-
-client.on('message', msg => {
-    if(msg.content === 'ping') {
-        msg.reply('pong');
-    }
-});
-
-client.login(process.env.BOT_TOKEN);
+// Call a new Bot
+var bot: Bot = new Bot();
+// Make the bot listen
+bot.listen();

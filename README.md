@@ -21,4 +21,4 @@ To run this project first run `npm install`.
 Before being able to run the bot, you will need to have 
 the .env file that includes the bot's token.
 
-To start this project, you will need to first build it run `npm run build`, and then run `npm run dev` to run the compiled bot. 
+To start this project, you will need to build and run it by using `npm start`.

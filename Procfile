@@ -1,1 +1,1 @@
-worker: node app.js
+worker: tsc -p tsconfig.json && node build/app.js

@@ -44,7 +44,7 @@ module.exports = {
         "eol-last": ["error", "always"],
         "import/order": ["error"],
         "prettier/prettier": ["error", { "singleQuote": true }],
-        "no-console": ["error"],
+        "no-console": "off",
         "no-multiple-empty-lines": ["error", { max: 1 }],
         "semi": "off",
         "@typescript-eslint/semi": ["error", "always"],

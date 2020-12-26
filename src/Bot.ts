@@ -34,20 +34,20 @@ export class Bot {
   }
 
   // Import the commands
-  private importCommands() {
+  private importCommands(): void {
     this.commands.push(new Test());
   }
 
   // Log the bot into the server
-  private async login() {
+  private async login(): Promise<void> {
     await this.client.login(process.env.BOT_TOKEN);
     console.log(`Logged in as ${this.client.user.tag}`);
   }
 
   // Listen to the discord server
-  async listen() {
+  listen(): void {
     // Wait for a message to be sent by a user
-    await this.client.on('message', (message) => {
+    this.client.on('message', (message) => {
       // Check to see if the command starts with the specified prefix or if the author is the bot
       if (!message.content.startsWith(this.prefix) || message.author.bot) {
         return;

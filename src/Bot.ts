@@ -1,4 +1,12 @@
-import { Client, TextChannel } from 'discord.js';
+import {
+  Client,
+  Message,
+  MessageReaction,
+  PartialUser,
+  TextChannel,
+  User,
+  VoiceState,
+} from 'discord.js';
 import { Command } from './abstracts/Command';
 import { Test } from './commands/Test';
 import sponsorRooms from './sponsor-rooms';
@@ -37,6 +45,42 @@ export class Bot {
   private async login(): Promise<void> {
     await this.client.login(process.env.BOT_TOKEN);
     console.log(`Logged in as ${this.client.user.tag}`);
+  }
+
+  /**
+   * Checks that message was a command and executes it
+   *
+   * @param message Message that was sent
+   */
+  private onCommand(message: Message): void {
+    // Check to see if the command starts with the specified prefix or if the author is the bot
+    if (!message.content.startsWith(this.prefix) || message.author.bot) {
+      return;
+    }
+
+    //get the arguments from the message
+    const args: string[] = message.content
+      .slice(this.prefix.length)
+      .trim()
+      .split(/ +/);
+
+    //Pull the command from the arguments
+    const command: string = args.shift().toLowerCase();
+
+    //Try searching to see if a command is able to be executed
+    try {
+      //Loop through the commands finding triggers and then execute
+      for (let i = 0; i < this.commands.length; i++) {
+        if (this.commands[i].getTriggers().includes(command)) {
+          this.commands[i].execute(message, args);
+        }
+      }
+    } catch (error: any) {
+      console.error(error);
+      message.reply(
+        'Something went wrong while trying to execute that command!'
+      );
+    }
   }
 
   /**
@@ -90,7 +134,10 @@ export class Bot {
    * @param newMember Information of member after they joined the new voice channel
    * @param oldMember Information of member before they left the old voice channel
    */
-  private onLeaveWaitingRoom(oldMember, newMember): void {
+  private onLeaveWaitingRoom(
+    oldMember: VoiceState,
+    newMember: VoiceState
+  ): void {
     // Attempt to find the sponsor room object
     const sponsorRoomObject = sponsorRooms.find(
       (candidate) => candidate.waitingRoomVoiceChannelId == oldMember.channelID
@@ -122,39 +169,40 @@ export class Bot {
   }
 
   /**
+   * Verifies that a waiting room message was reacted to and finds the waiting
+   * room meta to move hacker into appropriate voice channel.
+   *
+   * @param r Message reaction object
+   * @param user User to make the reaction
+   */
+  private onWaitingRoomMessageReact(
+    r: MessageReaction,
+    user: User | PartialUser
+  ): void {
+    if (user.bot) {
+      return;
+    }
+
+    const meta = this.waitingRoomMeta.find(
+      (meta) => meta.messageId == r.message.id
+    );
+
+    if (meta) {
+      const guild = this.client.guilds.cache.get('725834706263867502');
+      const member = guild.members.cache.get(meta.memberId);
+      // Move hacker to discussion room if they are still in the waiting room
+      if (member.voice.channelID === meta.waitingRoomVoiceChannelId) {
+        member.voice.setChannel(meta.discussionRoomVoiceChannelId);
+      }
+    }
+  }
+
+  /**
    * Listen to the discord server
    */
   listen(): void {
-    // Wait for a message to be sent by a user
     this.client.on('message', (message) => {
-      // Check to see if the command starts with the specified prefix or if the author is the bot
-      if (!message.content.startsWith(this.prefix) || message.author.bot) {
-        return;
-      }
-
-      //get the arguments from the message
-      const args: string[] = message.content
-        .slice(this.prefix.length)
-        .trim()
-        .split(/ +/);
-
-      //Pull the command from the arguments
-      const command: string = args.shift().toLowerCase();
-
-      //Try searching to see if a command is able to be executed
-      try {
-        //Loop through the commands finding triggers and then execute
-        for (let i = 0; i < this.commands.length; i++) {
-          if (this.commands[i].getTriggers().includes(command)) {
-            this.commands[i].execute(message, args);
-          }
-        }
-      } catch (error: any) {
-        console.error(error);
-        message.reply(
-          'Something went wrong while trying to execute that command!'
-        );
-      }
+      this.onCommand(message);
     });
 
     this.client.on('voiceStateUpdate', async (oldMember, newMember) => {
@@ -163,37 +211,7 @@ export class Bot {
     });
 
     this.client.on('messageReactionAdd', (r, user) => {
-      if (user.bot) {
-        return;
-      }
-
-      const meta = this.waitingRoomMeta.find(
-        (meta) => meta.messageId == r.message.id
-      );
-
-      if (meta) {
-        const guild = this.client.guilds.cache.get('725834706263867502');
-        const member = guild.members.cache.get(meta.memberId);
-        // Move hacker to discussion room if they are still in the waiting room
-        if (member.voice.channelID === meta.waitingRoomVoiceChannelId) {
-          member.voice.setChannel(meta.discussionRoomVoiceChannelId);
-        }
-      }
+      this.onWaitingRoomMessageReact(r, user);
     });
-
-    // this.client.on('messageReactionRemove', (r) => {
-    //   const meta = this.waitingRoomMeta.find(
-    //     (meta) => meta.messageId == r.message.id
-    //   );
-
-    //   if (meta) {
-    //     const guild = this.client.guilds.cache.get('725834706263867502');
-    //     const member = guild.members.cache.get(meta.memberId);
-    //     // Move hacker to discussion room if they are still in the waiting room
-    //     if (member.voice.channelID === meta.discussionRoomVoiceChannelId) {
-    //       member.voice.kick();
-    //     }
-    //   }
-    // });
   }
 }

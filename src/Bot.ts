@@ -90,7 +90,15 @@ export class Bot {
    *
    * @param newMember Information of member after they joined the new voice channel
    */
-  private async onJoinWaitingRoom(newMember): Promise<void> {
+  private async onJoinWaitingRoom(
+    oldMember: VoiceState,
+    newMember: VoiceState
+  ): Promise<void> {
+    // Make sure that the member changed channels
+    if (oldMember.channelID === newMember.channelID) {
+      return;
+    }
+
     // Attempt to find the sponsor room object
     const sponsorRoomObject = sponsorRooms.find(
       (candidate) => candidate.waitingRoomVoiceChannelId == newMember.channelID
@@ -141,6 +149,11 @@ export class Bot {
     oldMember: VoiceState,
     newMember: VoiceState
   ): void {
+    // Make sure that the member changed channels
+    if (oldMember.channelID === newMember.channelID) {
+      return;
+    }
+
     // Attempt to find the sponsor room object
     const sponsorRoomObject = sponsorRooms.find(
       (candidate) => candidate.waitingRoomVoiceChannelId == oldMember.channelID
@@ -219,7 +232,7 @@ export class Bot {
     });
 
     this.client.on('voiceStateUpdate', async (oldMember, newMember) => {
-      await this.onJoinWaitingRoom(newMember);
+      await this.onJoinWaitingRoom(oldMember, newMember);
       await this.onLeaveWaitingRoom(oldMember, newMember);
     });
 

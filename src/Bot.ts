@@ -122,9 +122,8 @@ export class Bot {
       const message = await sponsorTextChannel.send(
         `${member.nickname} is in the ${sponsorName} waiting room. Add a reaction for which booth to move them to.`
       );
-
       for (let i = 0; i < discussionRoomVoiceChannelIds.length; i++) {
-        await message.react(reactions[i]);
+        message.react(reactions[i]);
       }
 
       // Add the new waiting room meta object to use for later

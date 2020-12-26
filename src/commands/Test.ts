@@ -1,14 +1,10 @@
-import {Message} from 'discord.js';
-import {Command} from '../abstracts/Command';
+import { Message } from 'discord.js';
+import { Command } from '../abstracts/Command';
 
 // Test command for testing Command Handling
 export class Test extends Command {
   constructor() {
-    super(
-      "Test",
-      "Testing Command Handling",
-      ["im","i'm"]
-    );
+    super('Test', 'Testing Command Handling', ['im', "i'm"]);
   }
 
   // Execute the command

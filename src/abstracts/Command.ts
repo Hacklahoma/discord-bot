@@ -1,17 +1,13 @@
 // Abstract class to set up commands
 
-import {Message} from 'discord.js';
+import { Message } from 'discord.js';
 
 export abstract class Command {
   private name: string;
   private description: string;
   private triggers: string[];
 
-  constructor(
-    name: string, 
-    description: string,
-    triggers: string[]
-  ) {
+  constructor(name: string, description: string, triggers: string[]) {
     this.name = name;
     this.description = description;
     this.triggers = triggers;

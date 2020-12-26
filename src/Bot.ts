@@ -12,12 +12,13 @@ import { Test } from './commands/Test';
 import sponsorRooms from './sponsor-rooms';
 
 type WaitingRoomMeta = {
-  subject: 'waiting room';
   memberId: string;
   waitingRoomVoiceChannelId: string;
-  discussionRoomVoiceChannelId: string;
+  discussionRoomVoiceChannelIds: string[];
   messageId: string;
 };
+
+const reactions = ['1️⃣', '2️⃣', '3️⃣'];
 
 export class Bot {
   client: Client;
@@ -100,7 +101,7 @@ export class Bot {
       const {
         sponsorTextChannelId,
         waitingRoomVoiceChannelId,
-        discussionRoomVoiceChannelId,
+        discussionRoomVoiceChannelIds,
         sponsorName,
       } = sponsorRoomObject;
       const sponsorTextChannel = this.client.channels.cache.get(
@@ -111,16 +112,18 @@ export class Bot {
 
       // Send message that user joined and add reaction
       const message = await sponsorTextChannel.send(
-        `${member.nickname} is in the ${sponsorName} waiting room. Add a reaction when you are ready to accept them.`
+        `${member.nickname} is in the ${sponsorName} waiting room. Add a reaction for which booth to move them to.`
       );
-      message.react('🚪');
+
+      for (let i = 0; i < discussionRoomVoiceChannelIds.length; i++) {
+        await message.react(reactions[i]);
+      }
 
       // Add the new waiting room meta object to use for later
       const meta: WaitingRoomMeta = {
-        subject: 'waiting room',
         memberId: member.id,
         waitingRoomVoiceChannelId,
-        discussionRoomVoiceChannelId,
+        discussionRoomVoiceChannelIds,
         messageId: message.id,
       };
       this.waitingRoomMeta.push(meta);
@@ -179,20 +182,30 @@ export class Bot {
     r: MessageReaction,
     user: User | PartialUser
   ): void {
+    // Make sure this was not from a bot
     if (user.bot) {
       return;
     }
 
+    // Make sure appropriate emoji was given
+    const index = reactions.indexOf(r.emoji.name);
+    if (index == -1) {
+      return;
+    }
+
+    // Get waiting room meta
     const meta = this.waitingRoomMeta.find(
       (meta) => meta.messageId == r.message.id
     );
 
-    if (meta) {
+    // Check that the meta exists and is not given an emoji that will overflow array
+    if (meta && index <= meta.discussionRoomVoiceChannelIds.length) {
       const guild = this.client.guilds.cache.get('725834706263867502');
       const member = guild.members.cache.get(meta.memberId);
+
       // Move hacker to discussion room if they are still in the waiting room
       if (member.voice.channelID === meta.waitingRoomVoiceChannelId) {
-        member.voice.setChannel(meta.discussionRoomVoiceChannelId);
+        member.voice.setChannel(meta.discussionRoomVoiceChannelIds[index]);
       }
     }
   }

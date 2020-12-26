@@ -1,7 +1,7 @@
 import { Client, TextChannel } from 'discord.js';
 import { Command } from './abstracts/Command';
 import { Test } from './commands/Test';
-import sponsorRooms from './sponsor-rooms/sponsor-rooms';
+import sponsorRooms from './sponsor-rooms';
 
 type WaitingRoomMeta = {
   subject: 'waiting room';

@@ -26,6 +26,8 @@
   "homepage": "https://github.com/Hacklahoma/discord-bot#readme",
   "dependencies": {
     "@types/node": "^14.14.10",
+    "badwords-list": "^1.0.0",
+    "censor-sensor": "^1.0.6",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "reflect-metadata": "^0.1.13",

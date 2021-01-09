@@ -151,7 +151,7 @@ export class Bot {
         .addField(`Keyword${keywords.length > 1 ? 's' : ''}`, friendlyKeywords)
         .setTimestamp();
 
-      if (!explicit) {
+      if (!isExplicit) {
         embed.setURL(message.url);
       }
 

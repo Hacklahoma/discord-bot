@@ -1,6 +1,7 @@
 import {
   Client,
   Message,
+  MessageEmbed,
   MessageReaction,
   PartialUser,
   TextChannel,
@@ -118,10 +119,14 @@ export class Bot {
       const user = this.client.users.cache.get(newMember.id);
       const member = newMember.guild.member(user);
 
+      const embed = new MessageEmbed()
+        .setTitle(`${sponsorName} Waiting Room`)
+        .setDescription(
+          `<@${member.id}> is in the ${sponsorName} waiting room. Add a reaction for which booth to move them to.`
+        );
+
       // Send message that user joined and add reaction
-      const message = await sponsorTextChannel.send(
-        `${member.nickname} is in the ${sponsorName} waiting room. Add a reaction for which booth to move them to.`
-      );
+      const message = await sponsorTextChannel.send(embed);
       for (let i = 0; i < discussionRoomVoiceChannelIds.length; i++) {
         message.react(reactions[i]);
       }

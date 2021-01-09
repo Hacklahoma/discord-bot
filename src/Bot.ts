@@ -211,9 +211,6 @@ export class Bot {
       const user = this.client.users.cache.get(newMember.id);
       const member = newMember.guild.member(user);
 
-      console.log(user);
-      console.log(member);
-
       // Send message that user joined and add reaction
       const message = await sponsorTextChannel.send(
         `${member.nickname} is in the ${sponsorName} waiting room. Add a reaction for which booth to move them to.`

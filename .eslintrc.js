@@ -54,7 +54,9 @@ module.exports = {
           functions: false,
           typedefs: false
         }],
-        "@typescript-eslint/no-explicit-any": "error"
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/await-thenable": "off",
+        "@typescript-eslint/no-misused-promises": "off",
       }
     }
   ]

@@ -3,14 +3,17 @@ import {
   Message,
   MessageEmbed,
   MessageReaction,
+  PartialMessage,
   PartialUser,
   TextChannel,
   User,
   VoiceState,
 } from 'discord.js';
+import { CensorSensor } from 'censor-sensor';
+import { flag, explicit } from './helpers/bad-words';
 import { Command } from './abstracts/Command';
 import { Test } from './commands/Test';
-import sponsorRooms from './sponsor-rooms';
+import sponsorRooms from './helpers/sponsor-rooms';
 
 type WaitingRoomMeta = {
   memberId: string;
@@ -26,6 +29,8 @@ export class Bot {
   commands: Command[];
   prefix: string;
   waitingRoomMeta: WaitingRoomMeta[];
+  explicitCensor: CensorSensor;
+  flagCensor: CensorSensor;
 
   // Make a bot with a client and a collection of commands
   constructor() {
@@ -33,6 +38,12 @@ export class Bot {
     this.commands = [];
     this.prefix = process.env.PREFIX;
     this.waitingRoomMeta = [];
+    this.explicitCensor = new CensorSensor();
+    this.flagCensor = new CensorSensor();
+    this.explicitCensor.addLocale('explicit', explicit);
+    this.explicitCensor.setLocale('explicit');
+    this.flagCensor.addLocale('flag', flag);
+    this.flagCensor.setLocale('flag');
 
     this.importCommands();
     this.login();
@@ -82,6 +93,87 @@ export class Bot {
       message.reply(
         'Something went wrong while trying to execute that command!'
       );
+    }
+  }
+
+  /**
+   * Moderates messages that come through and takes appropriate actions based on content
+   *
+   * @see bad-words.ts
+   */
+  private moderateMessage(message: Message | PartialMessage): void {
+    if (message.author.bot) {
+      return;
+    }
+
+    const sendMessage = (isExplicit: boolean): void => {
+      // Prepare variables to send message in admin channel
+      const flaggedMessagesChannelId = '796164291710943252';
+      const adminChannel = this.client.channels.cache.get(
+        flaggedMessagesChannelId
+      ) as TextChannel;
+      const author = message.author;
+      const channel = message.channel as TextChannel;
+
+      let color;
+      let title;
+      let description;
+      if (isExplicit) {
+        color = '#f53b3b';
+        title = 'Explicit Message';
+        description = `<@${author.id}>'s message has been removed in <#${channel.id}>`;
+      } else {
+        color = '#f5983b';
+        title = 'Flagged Message';
+        description = `Please review <@${author.id}>'s message in <#${channel.id}>`;
+      }
+
+      // Get list of keywords
+      const keywords = Object.keys(isExplicit ? explicit : flag)
+        .filter((val) => message.content.includes(val))
+        .reverse();
+
+      let friendlyKeywords = '';
+      for (const val of keywords) {
+        if (friendlyKeywords.length > 1) {
+          friendlyKeywords += `, ${val}`;
+        } else {
+          friendlyKeywords = val;
+        }
+      }
+
+      // Format message
+      const embed = new MessageEmbed()
+        .setColor(color)
+        .setTitle(title)
+        .setDescription(description)
+        .addField('Message', message.content)
+        .addField(`Keyword${keywords.length > 1 ? 's' : ''}`, friendlyKeywords)
+        .setTimestamp();
+
+      if (!isExplicit) {
+        embed.setURL(message.url);
+      }
+
+      // Alert admin channel
+      adminChannel.send(embed);
+    };
+
+    // Explicit is found
+    if (this.explicitCensor.isProfane(message.content)) {
+      // Delete message
+      message.delete();
+
+      // Alert #flagged-messages channel
+      sendMessage(true);
+      return;
+    }
+
+    // Message to be flagged is found
+    if (this.flagCensor.isProfane(message.content)) {
+      // Alert #flagged-messages channel
+      sendMessage(false);
+      return;
     }
   }
 
@@ -233,6 +325,11 @@ export class Bot {
   listen(): void {
     this.client.on('message', (message) => {
       this.onCommand(message);
+      this.moderateMessage(message);
+    });
+
+    this.client.on('messageUpdate', (oldMessage, newMessage) => {
+      this.moderateMessage(newMessage);
     });
 
     this.client.on('voiceStateUpdate', async (oldMember, newMember) => {

@@ -5,8 +5,12 @@ import { ExpressServer } from './server/ExpressServer';
 
 // Call a new Bot
 const bot: Bot = new Bot();
-// Make the bot listen
-bot.listen();
 
-const server: ExpressServer = new ExpressServer(bot);
-server.listen();
+// Login the bot
+bot.login().then(() => {
+  bot.listen();
+
+  // Open express server
+  const server: ExpressServer = new ExpressServer(bot);
+  server.listen();
+});

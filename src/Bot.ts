@@ -49,7 +49,6 @@ export class Bot {
     this.flagCensor.setLocale('flag');
 
     this.importCommands();
-    this.login();
   }
 
   // Import the commands
@@ -58,7 +57,7 @@ export class Bot {
   }
 
   // Log the bot into the server
-  private async login(): Promise<void> {
+  async login(): Promise<void> {
     await this.client.login(process.env.BOT_TOKEN);
     console.log(`Logged in as ${this.client.user.tag}`);
   }

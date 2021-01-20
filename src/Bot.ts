@@ -1,5 +1,8 @@
 import {
   Client,
+  Collection,
+  Guild,
+  GuildMember,
   Message,
   MessageEmbed,
   MessageReaction,
@@ -320,6 +323,23 @@ export class Bot {
   }
 
   /**
+   * Retrieves the list of members through a Promise for a Discord Guild. Will need
+   * to callback by ".then((members) => {})" in order to obtain the members.
+   */
+  getMemberList(): Promise<Collection<string, GuildMember>> {
+    const guild: Guild = this.client.guilds.cache.get('725834706263867502');
+    return guild.members.fetch();
+  }
+
+  /**
+   * Retrieves a member from the Discord Guild.
+   */
+  getMember(discord_id: string): GuildMember {
+    const guild: Guild = this.client.guilds.cache.get('725834706263867502');
+    return guild.members.cache.get(discord_id);
+  }
+
+  /**
    * Listen to the discord server
    */
   listen(): void {
@@ -339,6 +359,10 @@ export class Bot {
 
     this.client.on('messageReactionAdd', (r, user) => {
       this.onWaitingRoomMessageReact(r, user);
+    });
+
+    this.client.on('guildMemberAdd', (member: GuildMember) => {
+      member.send('hi');
     });
   }
 }

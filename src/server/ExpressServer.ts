@@ -11,7 +11,7 @@ export class ExpressServer {
   private app: Application;
   private server: Server;
   private bot: Bot;
-  private PORT: string = process.env.EXPRESS_PORT;
+  private PORT: string = process.env.PORT;
   private allowedOrgins = [
     'http://localhost:8080/',
     'https://register.hacklahoma.org',

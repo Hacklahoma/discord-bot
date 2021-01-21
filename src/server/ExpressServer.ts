@@ -15,6 +15,8 @@ export class ExpressServer {
   private allowedOrgins = [
     'http://localhost:8080/',
     'https://register.hacklahoma.org',
+    'http://localhost:8000/',
+    'http://localhost:5432/'
   ];
 
   constructor(bot: Bot) {

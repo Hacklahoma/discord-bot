@@ -91,7 +91,7 @@ export class ExpressServer {
         if (
           members.find((member) => member.user.id === req.params.discord_id)
         ) {
-          res.json({ exist: true });
+          res.json({ exists: true });
         } else {
           res.json({ exists: false });
         }

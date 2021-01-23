@@ -1,7 +1,6 @@
 import { Server } from 'http';
 import * as express from 'express';
 import { Application } from 'express';
-import { GuildMember } from 'discord.js';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
 import * as bodyParser from 'body-parser';
@@ -16,7 +15,7 @@ export class ExpressServer {
     'http://localhost:8080/',
     'https://register.hacklahoma.org',
     'http://localhost:8000/',
-    'http://localhost:5432/'
+    'http://localhost:5432/',
   ];
 
   constructor(bot: Bot) {
@@ -51,24 +50,52 @@ export class ExpressServer {
     // Preflight
     this.app.options('*', cors());
 
-    this.app.get('/', async (req, res) => {
+    /*this.app.get('/', async (req, res) => {
       await this.bot.getMemberList().then((members) => {
         res.status(200);
         res.json(members.toJSON());
         res.end();
       });
+    });*/
+
+    /**
+     * put request to check in the user. Requires discord_id, name, and team_name in the body
+     */
+    this.app.put('/check_in', async (req, res) => {
+      await this.bot
+        .checkMemberIn(req.body.discord_id, req.body.name, req.body.team_name)
+        .then((members) => {
+          res.status(200);
+
+          const member = members.find(
+            (member) => member.user.id === req.params.discord_id
+          );
+          if (member && member.roles.cache.has('725846354223693895')) {
+            res.json({ success: true });
+          } else {
+            res.json({ success: false });
+          }
+          res.end();
+        });
     });
 
-    this.app.get('/check_user/:discord_id', (req, res) => {
-      res.status(200);
-      const member: GuildMember = this.bot.getMember(req.params.discord_id);
+    /**
+     * Check to see if the user exists in the server
+     */
+    this.app.get('/check_user/:discord_id', async (req, res) => {
+      await this.bot.getMemberList().then((members) => {
+        res.status(200);
 
-      if (member) {
-        res.json({ exists: true });
-      } else {
-        res.json({ exists: false });
-      }
-      res.end();
+        if (
+          members.find((member) => member.user.id === req.params.discord_id)
+        ) {
+          res.json({ exists: true });
+        } else {
+          res.json({ exists: false });
+        }
+
+        res.end();
+      });
     });
   }
 

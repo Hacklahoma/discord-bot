@@ -8,6 +8,7 @@ import {
   MessageReaction,
   PartialMessage,
   PartialUser,
+  Role,
   TextChannel,
   User,
   VoiceState,
@@ -322,6 +323,35 @@ export class Bot {
   }
 
   /**
+   * Checks to see if a team exists on the guild and then create
+   * the team
+   * 
+   * @param guild The guild that the team is being checked
+   * @param member The guild member that is having the role added
+   * @param team_name The Team name of the team
+   */
+  private addTeam(guild: Guild, member: GuildMember, team_name: string): void {
+    const role: Role = guild.roles.cache.find(role => role.name === team_name);
+
+    if (!role){
+      guild.roles.create({
+        data: {
+          name: team_name,
+          color: '#1d1d1d'
+        },
+        reason: 'Adding team.'
+      }).then((role) => {
+        member.roles.add(role).catch(console.error);
+      })
+      .catch(console.error);
+    } else {
+      member.roles.add(role).catch(console.error);
+    }
+
+    
+  }
+
+  /**
    * Retrieves the list of members through a Promise for a Discord Guild. Will need
    * to callback by ".then((members) => {})" in order to obtain the members.
    */
@@ -331,11 +361,32 @@ export class Bot {
   }
 
   /**
-   * Retrieves a member from the Discord Guild.
+   * Finds a discord member and then add's hacker role, change its name, and add
+   * it's team.
    */
-  getMember(discord_id: string): GuildMember {
+  checkMemberIn(discord_id: string, name: string, team_name?: string): Promise<Collection<string, GuildMember>> {
     const guild: Guild = this.client.guilds.cache.get('725834706263867502');
-    return guild.members.cache.get(discord_id);
+    const members = guild.members.fetch()
+    
+    members.then((members) => {
+      const member: GuildMember = members.find((member) => member.user.id === discord_id);
+      if(member) {
+        //Set the nick name of the member
+        member.setNickname(name);
+
+        // Add the hacker role to the member
+        if(!member.roles.cache.has('725846354223693895')) {
+          member.roles.add('725846354223693895').catch(console.error);
+        }
+
+        // Add team name to the member
+        if(team_name) {
+          this.addTeam(guild, member, team_name);
+        }
+      }
+    });
+
+    return members;
   }
 
   /**

@@ -401,6 +401,7 @@ export class Bot {
         // Add the hacker role to the member
         if (!member.roles.cache.has('725846354223693895')) {
           member.roles.add('725846354223693895').catch(console.error);
+          member.roles.remove('796165808950476800').catch(console.error);
         }
 
         // Add team name to the member

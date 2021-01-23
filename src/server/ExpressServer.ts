@@ -40,7 +40,9 @@ export class ExpressServer {
           if (this.allowedOrgins.includes(origin)) {
             callback(null, true);
           } else {
-            console.log(origin);
+            if (origin) {
+              console.warn(`The origin '${origin}' is not allowed`);
+            }
             callback(null, false);
           }
         },

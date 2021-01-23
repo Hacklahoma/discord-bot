@@ -91,11 +91,36 @@ export class ExpressServer {
         if (
           members.find((member) => member.user.id === req.params.discord_id)
         ) {
-          res.json({ exists: true });
+          res.json({ exist: true });
         } else {
           res.json({ exists: false });
         }
+        res.end();
+      });
+    });
 
+    /**
+     * Check to see if the user exists in the server
+     */
+    this.app.get('/get_user/:discord_id', async (req, res) => {
+      await this.bot.getMemberList().then((members) => {
+        res.status(200);
+
+        const member = members.find(
+          (member) => member.user.id === req.params.discord_id
+        );
+
+        if (member) {
+          res.json({
+            discord_id: member.user.id,
+            tag: member.user.tag,
+          });
+        } else {
+          res.json({
+            discord_id: null,
+            tag: null,
+          });
+        }
         res.end();
       });
     });

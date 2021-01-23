@@ -322,6 +322,11 @@ export class Bot {
     }
   }
 
+  private onGuildMemberJoin(member: GuildMember): void {
+    member.roles.add('796165808950476800');
+    member.send(`I don't know what to write here yet but please read the rules and follow the process on https://register.hacklahoma.org/accounts/discord/${member.user.id}/. I swear it won't kill your computer?`);
+  }
+
   /**
    * Checks to see if a team exists on the guild and then create
    * the team
@@ -412,7 +417,7 @@ export class Bot {
     });
 
     this.client.on('guildMemberAdd', (member: GuildMember) => {
-      member.send('hi');
+      this.onGuildMemberJoin(member);
     });
   }
 }

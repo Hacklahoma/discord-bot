@@ -323,37 +323,50 @@ export class Bot {
   }
 
   private onGuildMemberJoin(member: GuildMember): void {
+    // Unregistered role
     member.roles.add('796165808950476800');
-    member.send(`I don't know what to write here yet but please read the rules and follow the process on https://register.hacklahoma.org/accounts/discord/${member.user.id}/. I swear it won't kill your computer?`);
+    member.send(
+      `
+      Welcome to Hacklahoma! Here is your special check-in link so that we can find your application!\n
+      https://register.hacklahoma.org/accounts/discord/${member.user.id}/ \n
+      \n
+      Never applied? No problem! We're offering walk-ins this year. Please fill out this Google Form and we'll register a select number of people.\n
+      https://forms.gle/Qqo1q6UbscC4UYrq8 \n
+      \n
+      If you're having any trouble, please reach out to a member with the <@&${725844826947584002}> role.
+      `
+    );
   }
 
   /**
    * Checks to see if a team exists on the guild and then create
    * the team
-   * 
+   *
    * @param guild The guild that the team is being checked
    * @param member The guild member that is having the role added
    * @param team_name The Team name of the team
    */
   private addTeam(guild: Guild, member: GuildMember, team_name: string): void {
-    const role: Role = guild.roles.cache.find(role => role.name === team_name);
+    const role: Role = guild.roles.cache.find(
+      (role) => role.name === team_name
+    );
 
-    if (!role){
-      guild.roles.create({
-        data: {
-          name: team_name,
-          color: '#1d1d1d'
-        },
-        reason: 'Adding team.'
-      }).then((role) => {
-        member.roles.add(role).catch(console.error);
-      })
-      .catch(console.error);
+    if (!role) {
+      guild.roles
+        .create({
+          data: {
+            name: team_name,
+            color: '#919191',
+          },
+          reason: 'Adding team.',
+        })
+        .then((role) => {
+          member.roles.add(role).catch(console.error);
+        })
+        .catch(console.error);
     } else {
       member.roles.add(role).catch(console.error);
     }
-
-    
   }
 
   /**
@@ -369,23 +382,29 @@ export class Bot {
    * Finds a discord member and then add's hacker role, change its name, and add
    * it's team.
    */
-  checkMemberIn(discord_id: string, name: string, team_name?: string): Promise<Collection<string, GuildMember>> {
+  checkMemberIn(
+    discord_id: string,
+    name: string,
+    team_name?: string
+  ): Promise<Collection<string, GuildMember>> {
     const guild: Guild = this.client.guilds.cache.get('725834706263867502');
-    const members = guild.members.fetch()
-    
+    const members = guild.members.fetch();
+
     members.then((members) => {
-      const member: GuildMember = members.find((member) => member.user.id === discord_id);
-      if(member) {
+      const member: GuildMember = members.find(
+        (member) => member.user.id === discord_id
+      );
+      if (member) {
         //Set the nick name of the member
         member.setNickname(name);
 
         // Add the hacker role to the member
-        if(!member.roles.cache.has('725846354223693895')) {
+        if (!member.roles.cache.has('725846354223693895')) {
           member.roles.add('725846354223693895').catch(console.error);
         }
 
         // Add team name to the member
-        if(team_name) {
+        if (team_name) {
           this.addTeam(guild, member, team_name);
         }
       }

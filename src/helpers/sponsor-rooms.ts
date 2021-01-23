@@ -17,6 +17,26 @@ const sponsorRooms: SponsorRoom[] = [
     ],
     sponsorName: 'Tailwind',
   },
+  {
+    sponsorTextChannelId: '801930465552105513',
+    waitingRoomVoiceChannelId: '801928250074202153',
+    discussionRoomVoiceChannelIds: [
+      '801928285473996820',
+      '801928323072131103',
+      '801928349848961044',
+    ],
+    sponsorName: 'Paycom',
+  },
+  {
+    sponsorTextChannelId: '801931772656746497',
+    waitingRoomVoiceChannelId: '801932628369997865',
+    discussionRoomVoiceChannelIds: [
+      '801932690974179329',
+      '801933156877991997',
+      '801933173654814720',
+    ],
+    sponsorName: 'Flywheel Energy',
+  },
 ];
 
 export default sponsorRooms;

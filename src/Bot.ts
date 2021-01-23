@@ -276,7 +276,7 @@ export class Bot {
 
       // Delete message and remove from waiting room meta
       if (meta) {
-        sponsorTextChannel.messages.cache.get(meta.messageId).delete();
+        sponsorTextChannel.messages.cache.get(meta.messageId)?.delete();
         const index = this.waitingRoomMeta.indexOf(meta);
         this.waitingRoomMeta.splice(index, 1);
       }

@@ -1,8 +1,8 @@
 import { Message } from 'discord.js';
 import { Command } from '../abstracts/Command';
 
-// Test command for testing Command Handling
-export class Test extends Command {
+// Command to hand walk ins
+export class WalkIn extends Command {
   constructor() {
     super('Walk-in User', "Add's Hacker to walkin and changes his name", [
       'walkin',

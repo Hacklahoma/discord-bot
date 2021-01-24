@@ -17,6 +17,7 @@ import { CensorSensor } from 'censor-sensor';
 import { flag, explicit } from './helpers/bad-words';
 import { Command } from './abstracts/Command';
 import { Test } from './commands/Test';
+import { WalkIn } from './commands/WalkIn'
 import sponsorRooms from './helpers/sponsor-rooms';
 
 type WaitingRoomMeta = {
@@ -55,6 +56,7 @@ export class Bot {
   // Import the commands
   private importCommands(): void {
     this.commands.push(new Test());
+    this.commands.push(new WalkIn());
   }
 
   // Log the bot into the server

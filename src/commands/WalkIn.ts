@@ -1,0 +1,38 @@
+import { Message } from 'discord.js';
+import { Command } from '../abstracts/Command';
+
+// Test command for testing Command Handling
+export class Test extends Command {
+  constructor() {
+    super('Walk-in User', "Add's Hacker to walkin and changes his name", [
+      'walkin',
+    ]);
+  }
+
+  // Execute the command
+  async execute(message: Message, args: string[]): Promise<void> {
+    if (message.member.hasPermission('ADMINISTRATOR')) {
+      await message.guild.members.fetch().then((members) => {
+        const member = members.find(
+          (member) => member.user.id === args[0] || member.user.tag === args[0]
+        );
+        if (member) {
+          // Add the hacker role to the member
+          if (!member.roles.cache.has('725846354223693895')) {
+            member.roles.add('725846354223693895').catch(console.error);
+            member.roles.remove('796165808950476800').catch(console.error);
+          }
+
+          // Get rid of the discord Id
+          args.shift();
+          // Set the nickname
+          member.setNickname(args.toString());
+        } else {
+          message.reply(`Could not find User by the Discord Id ${args[0]}`);
+        }
+      });
+    } else {
+      message.delete();
+    }
+  }
+}

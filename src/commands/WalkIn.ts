@@ -27,14 +27,12 @@ export class WalkIn extends Command {
           // Get rid of the discord Id
           args.shift();
           // Set the nickname
-          member.setNickname(args.toString());
-
-          console.log(args.toString());
+          member.setNickname(args.toString().replace(',', ' '));
 
           message.reply(
             `Success! I was able to find user ${
               member.user.tag
-            } and changed their name to ${args.toString()}`
+            } and changed their name to ${args.toString().replace(/,/g, ' ')}`
           );
         } else {
           message.reply(`Could not find User by the Discord Id ${args[0]}`);

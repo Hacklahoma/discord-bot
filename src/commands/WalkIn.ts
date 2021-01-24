@@ -16,6 +16,7 @@ export class WalkIn extends Command {
         const member = members.find(
           (member) => member.user.id === args[0] || member.user.tag === args[0]
         );
+        console.log(member);
         if (member) {
           // Add the hacker role to the member
           if (!member.roles.cache.has('725846354223693895')) {
@@ -27,6 +28,14 @@ export class WalkIn extends Command {
           args.shift();
           // Set the nickname
           member.setNickname(args.toString());
+
+          console.log(args.toString());
+
+          message.reply(
+            `Success! I was able to find user ${
+              member.user.tag
+            } and changed their name to ${args.toString()}`
+          );
         } else {
           message.reply(`Could not find User by the Discord Id ${args[0]}`);
         }

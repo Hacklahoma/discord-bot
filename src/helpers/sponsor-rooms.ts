@@ -37,6 +37,22 @@ const sponsorRooms: SponsorRoom[] = [
     ],
     sponsorName: 'Flywheel Energy',
   },
+  {
+    sponsorTextChannelId: '803390046672650310',
+    waitingRoomVoiceChannelId: '803389032137621504',
+    discussionRoomVoiceChannelIds: [
+      '803389119517950002',
+      '803389430064611359',
+      '803389449080668191',
+    ],
+    sponsorName: 'Clevyr',
+  },
+  {
+    sponsorTextChannelId: '803390087206273066',
+    waitingRoomVoiceChannelId: '802736714480091147',
+    discussionRoomVoiceChannelIds: ['802736996354359306'],
+    sponsorName: 'MLH',
+  },
 ];
 
 export default sponsorRooms;

@@ -409,8 +409,10 @@ export class Bot {
           } else {
             name = `${splitName[0]} ${splitName[len - 1]}`;
           }
+        } else if (name.length < 2){
+          name = "Error";
         }
-
+        
         //Set the nick name of the member
         member.setNickname(name);
 

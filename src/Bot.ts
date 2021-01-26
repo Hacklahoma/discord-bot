@@ -397,6 +397,20 @@ export class Bot {
         (member) => member.user.id === discord_id
       );
       if (member) {
+
+        // Check the lenght of the name
+        if (name.length > 32) {
+          const splitName = name.split(' ');
+          const len = splitName.length;
+
+          // Check to see if the First and Last name is still greater than 32
+          if (splitName[0].length + splitName[len - 1].length > 31) {
+            name = `${splitName[0]} ${splitName[len - 1].charAt(0)}.`;
+          } else {
+            name = `${splitName[0]} ${splitName[len - 1]}`;
+          }
+        }
+
         //Set the nick name of the member
         member.setNickname(name);
 

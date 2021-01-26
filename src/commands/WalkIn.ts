@@ -28,15 +28,14 @@ export class WalkIn extends Command {
           args.shift();
 
           // Get the nickname
-          const nickname = args.toString().replace(/,/g, ' ')
+          const nickname = args.toString().replace(/,/g, ' ');
 
           // Set the nickname
           member.setNickname(nickname);
 
+          // Reply to the message
           message.reply(
-            `Success! I was able to find user ${
-              member.user.tag
-            } and changed their name to ${nickname}`
+            `Success! I was able to find user ${member.user.tag} and changed their name to ${nickname}`
           );
         } else {
           message.reply(`Could not find User by the Discord id ${args[0]}`);

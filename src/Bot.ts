@@ -17,7 +17,8 @@ import { CensorSensor } from 'censor-sensor';
 import { flag, explicit } from './helpers/bad-words';
 import { Command } from './abstracts/Command';
 import { Test } from './commands/Test';
-import { WalkIn } from './commands/WalkIn'
+import { CheckIn } from './commands/CheckIn';
+import { WalkIn } from './commands/WalkIn';
 import sponsorRooms from './helpers/sponsor-rooms';
 
 type WaitingRoomMeta = {
@@ -57,6 +58,7 @@ export class Bot {
   private importCommands(): void {
     this.commands.push(new Test());
     this.commands.push(new WalkIn());
+    this.commands.push(new CheckIn());
   }
 
   // Log the bot into the server
@@ -327,17 +329,35 @@ export class Bot {
   private onGuildMemberJoin(member: GuildMember): void {
     // Unregistered role
     member.roles.add('796165808950476800');
-    member.send(
-      `
-      Welcome to Hacklahoma! Here is your special check-in link so that we can find your application!\n
-      https://register.hacklahoma.org/accounts/discord/${member.user.id}/ \n
-      \n
-      Never applied? No problem! We're offering walk-ins this year. Please fill out this Google Form and we'll register a select number of people.\n
-      https://forms.gle/Qqo1q6UbscC4UYrq8 \n
-      \n
-      If you're having any trouble, please reach out to a member with the <@&${725844826947584002}> role.
-      `
-    );
+
+    // Links
+    const checkInLink = `https://register.hacklahoma.org/accounts/discord/${member.id}/`;
+    const walkInLink = 'https://forms.gle/Qqo1q6UbscC4UYrq8';
+
+    // Craft embed message and send
+    const embed = new MessageEmbed()
+      .setAuthor(
+        'Hacklahoma',
+        'https://hacklahoma.org/static/media/logo2021.2851f7a5.png',
+        'https://2021.hacklahoma.org'
+      )
+      .setColor('#fe8826')
+      .setTitle('Welcome to Hacklahoma 2021!')
+      .setDescription(`Hey <@${member.id}>, we're excited to have you here!`)
+      .addField(
+        'How to check in',
+        `We first need to find your application that you submitted.\n[Click here to check in](${checkInLink})`
+      )
+      .addField(
+        "Didn't apply?",
+        `No problem! We're offering walk-ins this year to a select number of people.\n[Click here to submit a walk-in form](${walkInLink})`
+      )
+      .addField(
+        'Having trouble?',
+        'Please ask for help in the [#check-in-help](https://discord.gg/QURbd28TpE) channel.'
+      )
+      .setFooter('Happy hacking!');
+    member.send(embed);
   }
 
   /**
@@ -397,7 +417,6 @@ export class Bot {
         (member) => member.user.id === discord_id
       );
       if (member) {
-
         // Check the lenght of the name
         if (name.length > 32) {
           const splitName = name.split(' ');
@@ -409,10 +428,10 @@ export class Bot {
           } else {
             name = `${splitName[0]} ${splitName[len - 1]}`;
           }
-        } else if (name.length < 2){
-          name = "Error";
+        } else if (name.length < 2) {
+          name = 'Error';
         }
-        
+
         //Set the nick name of the member
         member.setNickname(name);
 

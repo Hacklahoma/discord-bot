@@ -64,65 +64,96 @@ export class ExpressServer {
      * put request to check in the user. Requires discord_id, name, and team_name in the body
      */
     this.app.put('/check_in', async (req, res) => {
-      await this.bot
-        .checkMemberIn(req.body.discord_id, req.body.name, req.body.team_name)
-        .then((members) => {
-          res.status(200);
+      // Check to see if username and password was given
+      if (
+        req.body.request_user === process.env.REG_USERNAME &&
+        req.body.request_pass === process.env.REG_PASSWORD
+      ) {
+        await this.bot
+          .checkMemberIn(req.body.discord_id, req.body.name, req.body.team_name)
+          .then((members) => {
+            res.status(200);
 
-          const member = members.find(
-            (member) => member.user.id === req.params.discord_id
-          );
-          if (member && member.roles.cache.has('725846354223693895')) {
-            res.json({ success: true });
-          } else {
-            res.json({ success: false });
-          }
-          res.end();
-        });
+            const member = members.find(
+              (member) => member.user.id === req.params.discord_id
+            );
+            if (member && member.roles.cache.has('725846354223693895')) {
+              res.json({ success: true });
+            } else {
+              res.json({ success: false });
+            }
+            res.end();
+          });
+      } else {
+        res.status(200);
+        res.statusMessage = 'Access Denied.';
+        res.end();
+      }
     });
 
     /**
      * Check to see if the user exists in the server
      */
     this.app.get('/check_user/:discord_id', async (req, res) => {
-      await this.bot.getMemberList().then((members) => {
-        res.status(200);
+      // Check to see if username and password was given
+      if (
+        req.body.request_user === process.env.REG_USERNAME &&
+        req.body.request_pass === process.env.REG_PASSWORD
+      ) {
+        //Get the members list and then find the specific user
+        await this.bot.getMemberList().then((members) => {
+          res.status(200);
 
-        if (
-          members.find((member) => member.user.id === req.params.discord_id)
-        ) {
-          res.json({ exists: true });
-        } else {
-          res.json({ exists: false });
-        }
+          if (
+            members.find((member) => member.user.id === req.params.discord_id)
+          ) {
+            res.json({ exists: true });
+          } else {
+            res.json({ exists: false });
+          }
+          res.end();
+        });
+      } else {
+        res.status(200);
+        res.statusMessage = 'Access Denied.';
         res.end();
-      });
+      }
     });
 
     /**
      * Check to see if the user exists in the server
      */
     this.app.get('/get_user/:discord_id', async (req, res) => {
-      await this.bot.getMemberList().then((members) => {
+      // Check to see if username and password was given
+      if (
+        req.body.request_user === process.env.REG_USERNAME &&
+        req.body.request_pass === process.env.REG_PASSWORD
+      ) {
+        await this.bot.getMemberList().then((members) => {
+          res.status(200);
+
+          const member = members.find(
+            (member) => member.user.id === req.params.discord_id
+          );
+
+          if (member) {
+            res.json({
+              discord_id: member.user.id,
+              tag: member.user.tag,
+            });
+          } else {
+            res.json({
+              discord_id: null,
+              tag: null,
+            });
+          }
+          res.end();
+        });
+      } else {
         res.status(200);
-
-        const member = members.find(
-          (member) => member.user.id === req.params.discord_id
-        );
-
-        if (member) {
-          res.json({
-            discord_id: member.user.id,
-            tag: member.user.tag,
-          });
-        } else {
-          res.json({
-            discord_id: null,
-            tag: null,
-          });
-        }
+        res.statusMessage = 'Access Denied.';
         res.end();
-      });
+      }
     });
   }
 

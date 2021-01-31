@@ -20,6 +20,7 @@ import { Test } from './commands/Test';
 import { CheckIn } from './commands/CheckIn';
 import { WalkIn } from './commands/WalkIn';
 import sponsorRooms from './helpers/sponsor-rooms';
+import { response } from 'express';
 
 type WaitingRoomMeta = {
   memberId: string;
@@ -327,37 +328,68 @@ export class Bot {
   }
 
   private onGuildMemberJoin(member: GuildMember): void {
-    // Unregistered role
-    member.roles.add('796165808950476800');
+    const axios = require('axios');
+    axios.get(`${process.env.OURBOROS_DISCORD_DATA}`, {
+        params: {
+          discord_id: member.id,
+          request_user: process.env.REG_USERNAME,
+          request_pass: process.env.REG_PASSWORD
+        }
+      }).then((response) => {
+        // Unregistered role
+        member.roles.add('796165808950476800');
+        // Check to see if the user has checked in already
+        if (response.data === 'no_app'){
+          // Links
+          const checkInLink = `https://register.hacklahoma.org/accounts/discord/${member.id}/`;
+          const walkInLink = 'https://forms.gle/Qqo1q6UbscC4UYrq8';
 
-    // Links
-    const checkInLink = `https://register.hacklahoma.org/accounts/discord/${member.id}/`;
-    const walkInLink = 'https://forms.gle/Qqo1q6UbscC4UYrq8';
+          // Craft embed message and send
+          const embed = new MessageEmbed()
+            .setAuthor(
+              'Hacklahoma',
+              'https://hacklahoma.org/static/media/logo2021.2851f7a5.png',
+              'https://2021.hacklahoma.org'
+            )
+            .setColor('#fe8826')
+            .setTitle('Welcome to Hacklahoma 2021!')
+            .setDescription(`Hey <@${member.id}>, we're excited to have you here!`)
+            .addField(
+              'How to check in',
+              `We first need to find your application that you submitted.\n[Click here to check in](${checkInLink})`
+            )
+            .addField(
+              "Didn't apply?",
+              `No problem! We're offering walk-ins this year to a select number of people.\n[Click here to submit a walk-in form](${walkInLink})`
+            )
+            .addField(
+              'Having trouble?',
+              'Please ask for help in the [#check-in-help](https://discord.gg/QURbd28TpE) channel.'
+            )
+            .setFooter('Happy hacking!');
+          member.send(embed);
+        } else {
+          const name: string = response.data['name'];
 
-    // Craft embed message and send
-    const embed = new MessageEmbed()
-      .setAuthor(
-        'Hacklahoma',
-        'https://hacklahoma.org/static/media/logo2021.2851f7a5.png',
-        'https://2021.hacklahoma.org'
-      )
-      .setColor('#fe8826')
-      .setTitle('Welcome to Hacklahoma 2021!')
-      .setDescription(`Hey <@${member.id}>, we're excited to have you here!`)
-      .addField(
-        'How to check in',
-        `We first need to find your application that you submitted.\n[Click here to check in](${checkInLink})`
-      )
-      .addField(
-        "Didn't apply?",
-        `No problem! We're offering walk-ins this year to a select number of people.\n[Click here to submit a walk-in form](${walkInLink})`
-      )
-      .addField(
-        'Having trouble?',
-        'Please ask for help in the [#check-in-help](https://discord.gg/QURbd28TpE) channel.'
-      )
-      .setFooter('Happy hacking!');
-    member.send(embed);
+          this.checkMemberIn(
+            response.data['discord_id'], 
+            name, 
+            response.data['team_name']
+          );
+          // Craft embed message and send
+          const embed = new MessageEmbed()
+            .setAuthor(
+              'Hacklahoma',
+              'https://hacklahoma.org/static/media/logo2021.2851f7a5.png',
+              'https://2021.hacklahoma.org'
+            )
+            .setColor('#fe8826')
+            .setTitle('Welcome Back to Hacklahoma 2021!')
+            .setDescription(`Hey ${name}, we've managed to obtain your application!`)
+            .setFooter('Happy hacking!');
+          member.send(embed);
+        }
+      })
   }
 
   /**

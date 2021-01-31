@@ -9,6 +9,8 @@ export class Test extends Command {
 
   // Execute the command
   async execute(message: Message, args: string[]): Promise<void> {
-    await message.channel.send(`Hi ${args.toString().replace(/,/g, ' ')}! I'm dad!`);
+    await message.channel.send(
+      `Hi ${args.toString().replace(/,/g, ' ')}! I'm dad!`
+    );
   }
 }

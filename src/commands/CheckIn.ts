@@ -1,4 +1,4 @@
-import { GuildMember, Message, MessageEmbed, User } from 'discord.js';
+import { GuildMember, Message, MessageEmbed } from 'discord.js';
 import { Command } from '../abstracts/Command';
 
 // Test command for testing Command Handling

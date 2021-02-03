@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { GuildMember, Message, MessageEmbed, User } from 'discord.js';
 import { Command } from '../abstracts/Command';
 
 // Test command for testing Command Handling
@@ -9,13 +9,13 @@ export class CheckIn extends Command {
 
   // Execute the command
   async execute(message: Message, args: string[]): Promise<void> {
-    // Try to get id of mentioned members, users, or author.
-    let id = message.mentions.members?.first()?.id;
+    let member: User | GuildMember;
+    let id = args[0];
     if (!id) {
-      id = message.mentions.users?.first()?.id;
-      if (!id) {
-        id = message.author.id;
-      }
+      id = message.author.id;
+      member = message.author;
+    } else {
+      member = message.guild.members.cache.get(id);
     }
 
     // Links
@@ -45,6 +45,6 @@ export class CheckIn extends Command {
         'Please ask for help in the [#check-in-help](https://discord.gg/QURbd28TpE) channel.'
       )
       .setFooter('Happy hacking!');
-    await message.channel.send(embed);
+    await member.send(embed);
   }
 }

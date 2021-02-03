@@ -9,13 +9,26 @@ export class CheckIn extends Command {
 
   // Execute the command
   async execute(message: Message, args: string[]): Promise<void> {
-    let member: User | GuildMember;
+    // Check if message author has permission to run command
+    if (!message.member.hasPermission('ADMINISTRATOR')) {
+      return;
+    }
+
+    // Get member object and id of either author or a member
+    // that was added by id in the args
+    let member: GuildMember;
     let id = args[0];
     if (!id) {
       id = message.author.id;
-      member = message.author;
+      member = message.member;
     } else {
       member = message.guild.members.cache.get(id);
+    }
+
+    // Stop if couldn't find member with ID
+    if (!member) {
+      message.member.send('I was unable to find a member with the ID of ' + id);
+      return;
     }
 
     // Links

@@ -14,13 +14,13 @@ import {
   VoiceState,
 } from 'discord.js';
 import { CensorSensor } from 'censor-sensor';
+import { response } from 'express';
 import { flag, explicit } from './helpers/bad-words';
 import { Command } from './abstracts/Command';
 import { Test } from './commands/Test';
 import { CheckIn } from './commands/CheckIn';
 import { WalkIn } from './commands/WalkIn';
 import sponsorRooms from './helpers/sponsor-rooms';
-import { response } from 'express';
 
 type WaitingRoomMeta = {
   memberId: string;
@@ -66,6 +66,19 @@ export class Bot {
   async login(): Promise<void> {
     await this.client.login(process.env.BOT_TOKEN);
     console.log(`Logged in as ${this.client.user.tag}`);
+  }
+
+  /**
+   * Handles errors that were thrown
+   * @param error
+   */
+  private handleError(error: Error): void {
+    const errorChannelId = '806630672445472808';
+    const errorChannel = this.client.channels.cache.get(
+      errorChannelId
+    ) as TextChannel;
+    console.error('Unhandled error:', error);
+    errorChannel.send(JSON.stringify(error));
   }
 
   /**
@@ -328,18 +341,21 @@ export class Bot {
   }
 
   private onGuildMemberJoin(member: GuildMember): void {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const axios = require('axios');
-    axios.get(`${process.env.OURBOROS_DISCORD_DATA}`, {
+    axios
+      .get(`${process.env.OURBOROS_DISCORD_DATA}`, {
         params: {
           discord_id: member.id,
           request_user: process.env.REG_USERNAME,
-          request_pass: process.env.REG_PASSWORD
-        }
-      }).then((response) => {
+          request_pass: process.env.REG_PASSWORD,
+        },
+      })
+      .then((response) => {
         // Unregistered role
         member.roles.add('796165808950476800');
         // Check to see if the user has checked in already
-        if (response.data === 'no_app'){
+        if (response.data === 'no_app') {
           // Links
           const checkInLink = `https://register.hacklahoma.org/accounts/discord/${member.id}/`;
           const walkInLink = 'https://forms.gle/Qqo1q6UbscC4UYrq8';
@@ -353,7 +369,9 @@ export class Bot {
             )
             .setColor('#fe8826')
             .setTitle('Welcome to Hacklahoma 2021!')
-            .setDescription(`Hey <@${member.id}>, we're excited to have you here!`)
+            .setDescription(
+              `Hey <@${member.id}>, we're excited to have you here!`
+            )
             .addField(
               'How to check in',
               `We first need to find your application that you submitted.\n[Click here to check in](${checkInLink})`
@@ -372,8 +390,8 @@ export class Bot {
           const name: string = response.data['name'];
 
           this.checkMemberIn(
-            response.data['discord_id'], 
-            name, 
+            response.data['discord_id'],
+            name,
             response.data['team_name']
           );
           // Craft embed message and send
@@ -385,11 +403,13 @@ export class Bot {
             )
             .setColor('#fe8826')
             .setTitle('Welcome Back to Hacklahoma 2021!')
-            .setDescription(`Hey ${name}, we've managed to obtain your application!`)
+            .setDescription(
+              `Hey ${name}, we've managed to obtain your application!`
+            )
             .setFooter('Happy hacking!');
           member.send(embed);
         }
-      })
+      });
   }
 
   /**
@@ -487,6 +507,10 @@ export class Bot {
    * Listen to the discord server
    */
   listen(): void {
+    this.client.on('error', (error) => {
+      this.handleError(error);
+    });
+
     this.client.on('message', (message) => {
       this.onCommand(message);
       this.moderateMessage(message);

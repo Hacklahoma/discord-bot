@@ -466,7 +466,7 @@ export class Bot {
     name: string,
     team_name?: string
   ): Promise<Collection<string, GuildMember>> {
-    console.log(`Checking '${discord_id}' in.`);
+    console.log(`Checking '${discord_id}' in with name '${name}' and team_name '${team_name}.'`);
 
     const guild: Guild = this.client.guilds.cache.get('725834706263867502');
     const members = guild.members.fetch();

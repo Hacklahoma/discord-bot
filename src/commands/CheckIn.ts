@@ -22,7 +22,7 @@ export class CheckIn extends Command {
       id = message.author.id;
       member = message.member;
     } else {
-      member = message.guild.members.cache.get(id);
+      member = await message.guild.members.fetch(id);
     }
 
     // Stop if couldn't find member with ID

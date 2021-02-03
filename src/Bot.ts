@@ -356,6 +356,7 @@ export class Bot {
         member.roles.add('796165808950476800');
         // Check to see if the user has checked in already
         if (response.data === 'no_app') {
+          console.log(`'${member.id}' did not have an application linked yet.`);
           // Links
           const checkInLink = `https://register.hacklahoma.org/accounts/discord/${member.id}/`;
           const walkInLink = 'https://forms.gle/Qqo1q6UbscC4UYrq8';
@@ -386,7 +387,9 @@ export class Bot {
             )
             .setFooter('Happy hacking!');
           member.send(embed);
+          console.log(`Sending message to '${member.id}'.`);
         } else {
+          console.log(`'${member.id}' has application linked already.`);
           const name: string = response.data['name'];
 
           this.checkMemberIn(
@@ -408,6 +411,7 @@ export class Bot {
             )
             .setFooter('Happy hacking!');
           member.send(embed);
+          console.log(`Sending message to '${member.id}'.`);
         }
       });
   }
@@ -421,6 +425,7 @@ export class Bot {
    * @param team_name The Team name of the team
    */
   private addTeam(guild: Guild, member: GuildMember, team_name: string): void {
+    console.log(`Adding team to '${member.id}'.`);
     const role: Role = guild.roles.cache.find(
       (role) => role.name === team_name
     );
@@ -461,9 +466,12 @@ export class Bot {
     name: string,
     team_name?: string
   ): Promise<Collection<string, GuildMember>> {
+    console.log(`Checking '${discord_id}' in.`);
+
     const guild: Guild = this.client.guilds.cache.get('725834706263867502');
     const members = guild.members.fetch();
 
+    // Find the member based off of the discord id
     members.then((members) => {
       const member: GuildMember = members.find(
         (member) => member.user.id === discord_id
@@ -484,15 +492,18 @@ export class Bot {
           name = 'Error';
         }
 
+        console.log(`Setting nickname for '${discord_id}' to '${name}'.`);
         //Set the nick name of the member
         member.setNickname(name);
 
         // Add the hacker role to the member
         if (!member.roles.cache.has('725846354223693895')) {
+          console.log(`Adding Hacker role to '${discord_id}'.`);
           member.roles.add('725846354223693895').catch(console.error);
           member.roles.remove('796165808950476800').catch(console.error);
         }
 
+        console.log(`Checking Team for '${discord_id}'.`);
         // Add team name to the member
         if (team_name) {
           this.addTeam(guild, member, team_name);

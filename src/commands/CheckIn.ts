@@ -1,4 +1,4 @@
-import { GuildMember, Message, MessageEmbed } from 'discord.js';
+import { GuildMember, Message, MessageEmbed, User } from 'discord.js';
 import { Command } from '../abstracts/Command';
 
 // Test command for testing Command Handling
@@ -16,11 +16,11 @@ export class CheckIn extends Command {
 
     // Get member object and id of either author or a member
     // that was added by id in the args
-    let member: GuildMember;
+    let member: GuildMember | User;
     let id = args[0];
     if (!id) {
       id = message.author.id;
-      member = message.member;
+      member = message.member || message.author;
     } else {
       member = await message.guild.members.fetch(id);
     }

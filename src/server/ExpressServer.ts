@@ -171,6 +171,6 @@ export class ExpressServer {
    * Pings the express server to keep it awake
    */
   async ping(): Promise<void> {
-    await axios.get('hacklahoma-discord-bot.herokuapp.com');
+    await axios.get('http://hacklahoma-discord-bot.herokuapp.com');
   }
 }

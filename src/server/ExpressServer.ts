@@ -165,4 +165,11 @@ export class ExpressServer {
       console.log(`Express server running on port ${this.PORT}`);
     });
   }
+
+  /**
+   * Pings the express server to keep it awake
+   */
+  async ping(): Promise<void> {
+    await fetch('hacklahoma-discord-bot.herokuapp.com');
+  }
 }

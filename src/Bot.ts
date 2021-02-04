@@ -466,50 +466,56 @@ export class Bot {
     name: string,
     team_name?: string
   ): Promise<Collection<string, GuildMember>> {
-    console.log(`Checking '${discord_id}' in with name '${name}' and team_name '${team_name}.'`);
+    console.log(
+      `Checking '${discord_id}' in with name '${name}' and team_name '${team_name}.'`
+    );
 
     const guild: Guild = this.client.guilds.cache.get('725834706263867502');
     const members = guild.members.fetch();
 
     // Find the member based off of the discord id
-    members.then((members) => {
-      const member: GuildMember = members.find(
-        (member) => member.user.id === discord_id
-      );
-      if (member) {
-        // Check the lenght of the name
-        if (name.length > 32) {
-          const splitName = name.split(' ');
-          const len = splitName.length;
+    members
+      .then((members) => {
+        const member: GuildMember = members.find(
+          (member) => member.user.id === discord_id
+        );
+        if (member) {
+          // Check the lenght of the name
+          if (name.length > 32) {
+            const splitName = name.split(' ');
+            const len = splitName.length;
 
-          // Check to see if the First and Last name is still greater than 32
-          if (splitName[0].length + splitName[len - 1].length > 31) {
-            name = `${splitName[0]} ${splitName[len - 1].charAt(0)}.`;
-          } else {
-            name = `${splitName[0]} ${splitName[len - 1]}`;
+            // Check to see if the First and Last name is still greater than 32
+            if (splitName[0].length + splitName[len - 1].length > 31) {
+              name = `${splitName[0]} ${splitName[len - 1].charAt(0)}.`;
+            } else {
+              name = `${splitName[0]} ${splitName[len - 1]}`;
+            }
+          } else if (name.length < 2) {
+            name = 'Error';
           }
-        } else if (name.length < 2) {
-          name = 'Error';
-        }
 
-        console.log(`Setting nickname for '${discord_id}' to '${name}'.`);
-        //Set the nick name of the member
-        member.setNickname(name);
+          console.log(`Setting nickname for '${discord_id}' to '${name}'.`);
+          //Set the nick name of the member
+          member.setNickname(name);
 
-        // Add the hacker role to the member
-        if (!member.roles.cache.has('725846354223693895')) {
-          console.log(`Adding Hacker role to '${discord_id}'.`);
-          member.roles.add('725846354223693895').catch(console.error);
-          member.roles.remove('796165808950476800').catch(console.error);
-        }
+          // Add the hacker role to the member
+          if (!member.roles.cache.has('725846354223693895')) {
+            console.log(`Adding Hacker role to '${discord_id}'.`);
+            member.roles.add('725846354223693895').catch(console.error);
+            member.roles.remove('796165808950476800').catch(console.error);
+          }
 
-        console.log(`Checking Team for '${discord_id}'.`);
-        // Add team name to the member
-        if (team_name) {
-          this.addTeam(guild, member, team_name);
+          console.log(`Checking Team for '${discord_id}'.`);
+          // Add team name to the member
+          if (team_name) {
+            this.addTeam(guild, member, team_name);
+          }
         }
-      }
-    });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
     return members;
   }

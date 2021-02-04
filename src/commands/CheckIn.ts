@@ -10,7 +10,7 @@ export class CheckIn extends Command {
   // Execute the command
   async execute(message: Message, args: string[]): Promise<void> {
     // Check if message author has permission to run command
-    if (!message.member.hasPermission('ADMINISTRATOR')) {
+    if (message.member && !message.member.hasPermission('ADMINISTRATOR')) {
       return;
     }
 

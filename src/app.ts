@@ -19,7 +19,9 @@ bot.login().then(() => {
       await server.ping();
       console.log('Ping!');
     } catch (e) {
-      console.error('Unable to ping server: ', e);
+      if (e.response.status !== 404) {
+        console.error('Unable to ping server: ', e);
+      }
     }
   }, 15 * 60 * 1000);
 });

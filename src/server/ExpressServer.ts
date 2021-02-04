@@ -1,5 +1,6 @@
 import { Server } from 'http';
 import * as express from 'express';
+import axios from 'axios';
 import { Application } from 'express';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
@@ -170,6 +171,6 @@ export class ExpressServer {
    * Pings the express server to keep it awake
    */
   async ping(): Promise<void> {
-    await fetch('hacklahoma-discord-bot.herokuapp.com');
+    await axios.get('hacklahoma-discord-bot.herokuapp.com');
   }
 }

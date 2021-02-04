@@ -53,13 +53,11 @@ export class ExpressServer {
     // Preflight
     this.app.options('*', cors());
 
-    /*this.app.get('/', async (req, res) => {
-      await this.bot.getMemberList().then((members) => {
-        res.status(200);
-        res.json(members.toJSON());
-        res.end();
-      });
-    });*/
+    this.app.get('/', (req, res) => {
+      res.status(200);
+      res.json({ get: true });
+      res.end();
+    });
 
     /**
      * put request to check in the user. Requires discord_id, name, and team_name in the body

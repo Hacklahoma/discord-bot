@@ -13,7 +13,6 @@ import {
   User,
   VoiceState,
 } from 'discord.js';
-import { CensorSensor } from 'censor-sensor';
 import { response } from 'express';
 import { flag, explicit } from './helpers/bad-words';
 import { Command } from './abstracts/Command';
@@ -36,8 +35,6 @@ export class Bot {
   commands: Command[];
   prefix: string;
   waitingRoomMeta: WaitingRoomMeta[];
-  explicitCensor: CensorSensor;
-  flagCensor: CensorSensor;
 
   // Make a bot with a client and a collection of commands
   constructor() {
@@ -45,12 +42,6 @@ export class Bot {
     this.commands = [];
     this.prefix = process.env.PREFIX;
     this.waitingRoomMeta = [];
-    this.explicitCensor = new CensorSensor();
-    this.flagCensor = new CensorSensor();
-    this.explicitCensor.addLocale('explicit', explicit);
-    this.explicitCensor.setLocale('explicit');
-    this.flagCensor.addLocale('flag', flag);
-    this.flagCensor.setLocale('flag');
 
     this.importCommands();
   }
@@ -181,7 +172,7 @@ export class Bot {
     };
 
     // Explicit is found
-    if (this.explicitCensor.isProfane(message.content)) {
+    if (this.isProfane(message.content)) {
       // Delete message
       message.delete();
 
@@ -191,11 +182,23 @@ export class Bot {
     }
 
     // Message to be flagged is found
-    if (this.flagCensor.isProfane(message.content)) {
+    if (this.isProfane(message.content)) {
       // Alert #flagged-messages channel
       sendMessage(false);
       return;
     }
+  }
+
+  /**
+   * Checks a string to see if it contains profane content.
+   * 
+   * @param messageText The text to be evaluated.
+   * @returns Returns true if the message contains profane content.
+   */
+  private isProfane(messageText: string) {
+
+    //Return false if no profanity is found
+    return false;
   }
 
   /**

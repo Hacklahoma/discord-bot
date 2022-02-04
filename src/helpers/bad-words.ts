@@ -1,14 +1,25 @@
 import { object } from 'badwords-list';
 
 /**
+ * Leet speek alternatives to letters.
+ */
+ const leetLetters = {
+  a: "4@Д",
+  e: "3£€ë",
+  i: "1!|",
+  o: "0Ø",
+  u: "vµบ",
+}
+
+/**
  * Words that will be flagged in discord channel
  */
-export const flag: string[] = [ ...object, 'wtf', 'lmfao' ];
+const flagWords: string[] = [ ...object, 'wtf', 'lmfao' ];
 
 /**
  * Words that will be immediately removed
  */
-export const explicit: string[] = [
+const explicitWords: string[] = [
   'anal',
   'anus',
   'arse',
@@ -70,3 +81,13 @@ export const explicit: string[] = [
   'wank',
   'whore',
 ];
+
+/**
+ * RegExp for flagged words
+ */
+export const flag = new RegExp("", "ig");
+
+/**
+ * RegExp for explicit words
+ */
+export const explicit = new RegExp("", "ig");

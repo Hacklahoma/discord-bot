@@ -195,9 +195,12 @@ export class Bot {
    * @param messageText The text to be evaluated.
    * @returns Returns true if the message contains profane content.
    */
-  private isProfane(messageText: string, flagType: string[]): boolean {
-    //FIXME: ADD CHECK -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
-    
+  private isProfane(messageText: string, flagType: RegExp): boolean {
+    //Check if the word contains any explicit content using RegExp
+    if (messageText.search(flagType)) {
+      return true;
+    }
+
     //Return false if no profanity is found
     return false;
   }

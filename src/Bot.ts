@@ -355,7 +355,7 @@ export class Bot {
         // Unregistered role
         member.roles.add('796165808950476800');
         // Check to see if the user has checked in already
-        if (response.data === 'no_app') {
+        /*if (response.data === 'no_app') {
           console.log(`'${member.id}' did not have an application linked yet.`);
           // Links
           const checkInLink = `https://register.hacklahoma.org/accounts/discord/${member.id}/`;
@@ -369,9 +369,9 @@ export class Bot {
               'https://2021.hacklahoma.org'
             )
             .setColor('#fe8826')
-            .setTitle('Welcome to Hacklahoma 2021!')
+            .setTitle('Welcome to Hacklahoma 2022!')
             .setDescription(
-              `Hey <@${member.id}>, we're excited to have you here!`
+              `Hey <@${member.id}>, we're excited to have you here! This year due to how we are running a hybrid event, we will have different ways to chec`
             )
             .addField(
               'How to check in',
@@ -388,33 +388,32 @@ export class Bot {
             .setFooter('Happy hacking!');
           member.send(embed);
           console.log(`Sending message to '${member.id}'.`);
-        } else {
-          console.log(`'${member.id}' has application linked already.`);
-          const name: string = response.data['name'];
+        }*/
+        console.log(`'${member.id}' has application linked already.`);
+        const name: string = response.data['name'];
 
-          this.checkMemberIn(
-            response.data['discord_id'],
-            name,
-            response.data['team_name']
-          );
-          // Craft embed message and send
-          const embed = new MessageEmbed()
-            .setAuthor(
-              'Hacklahoma',
-              'https://hacklahoma.org/static/media/logo2021.2851f7a5.png',
-              'https://2021.hacklahoma.org'
-            )
-            .setColor('#fe8826')
-            .setTitle('Welcome Back to Hacklahoma 2021!')
-            .setDescription(
-              `Hey ${name}, we've managed to obtain your application!`
-            )
-            .setFooter('Happy hacking!');
-          member.send(embed);
-          console.log(`Sending message to '${member.id}'.`);
-        }
+        this.checkMemberIn(
+          response.data['discord_id'],
+          name,
+          response.data['team_name']
+        );
+        // Craft embed message and send
+        const embed = new MessageEmbed()
+          .setAuthor(
+            'Hacklahoma',
+            'https://hacklahoma.org/static/media/logo2022.e2bb5577.png',
+            'https://2022.hacklahoma.org'
+          )
+          .setColor('#fe8826')
+          .setTitle('Welcome Back to Hacklahoma 2022!')
+          .setDescription(
+            `Hey ${name}, we've managed to obtain your application!`
+          )
+          .setFooter('Happy hacking!');
+        member.send(embed);
+        console.log(`Sending message to '${member.id}'.`);
       });
-  }
+}
 
   /**
    * Checks to see if a team exists on the guild and then create
@@ -425,129 +424,129 @@ export class Bot {
    * @param team_name The Team name of the team
    */
   private addTeam(guild: Guild, member: GuildMember, team_name: string): void {
-    console.log(`Adding team to '${member.id}'.`);
-    const role: Role = guild.roles.cache.find(
-      (role) => role.name === team_name
-    );
+  console.log(`Adding team to '${member.id}'.`);
+  const role: Role = guild.roles.cache.find(
+    (role) => role.name === team_name
+  );
 
-    if (!role) {
-      guild.roles
-        .create({
-          data: {
-            name: team_name,
-            color: '#919191',
-          },
-          reason: 'Adding team.',
-        })
-        .then((role) => {
-          member.roles.add(role).catch(console.error);
-        })
-        .catch(console.error);
-    } else {
-      member.roles.add(role).catch(console.error);
-    }
-  }
-
-  /**
-   * Retrieves the list of members through a Promise for a Discord Guild. Will need
-   * to callback by ".then((members) => {})" in order to obtain the members.
-   */
-  getMemberList(): Promise<Collection<string, GuildMember>> {
-    const guild: Guild = this.client.guilds.cache.get('725834706263867502');
-    return guild.members.fetch();
-  }
-
-  /**
-   * Finds a discord member and then add's hacker role, change its name, and add
-   * it's team.
-   */
-  checkMemberIn(
-    discord_id: string,
-    name: string,
-    team_name?: string
-  ): Promise<Collection<string, GuildMember>> {
-    console.log(
-      `Checking '${discord_id}' in with name '${name}' and team_name '${team_name}.'`
-    );
-
-    const guild: Guild = this.client.guilds.cache.get('725834706263867502');
-    const members = guild.members.fetch();
-
-    // Find the member based off of the discord id
-    members
-      .then((members) => {
-        const member: GuildMember = members.find(
-          (member) => member.user.id === discord_id
-        );
-        if (member) {
-          // Check the lenght of the name
-          if (name.length > 32) {
-            const splitName = name.split(' ');
-            const len = splitName.length;
-
-            // Check to see if the First and Last name is still greater than 32
-            if (splitName[0].length + splitName[len - 1].length > 31) {
-              name = `${splitName[0]} ${splitName[len - 1].charAt(0)}.`;
-            } else {
-              name = `${splitName[0]} ${splitName[len - 1]}`;
-            }
-          } else if (name.length < 2) {
-            name = 'Error';
-          }
-
-          console.log(`Setting nickname for '${discord_id}' to '${name}'.`);
-          //Set the nick name of the member
-          member.setNickname(name);
-
-          // Add the hacker role to the member
-          if (!member.roles.cache.has('725846354223693895')) {
-            console.log(`Adding Hacker role to '${discord_id}'.`);
-            member.roles.add('725846354223693895').catch(console.error);
-            member.roles.remove('796165808950476800').catch(console.error);
-          }
-
-          console.log(`Checking Team for '${discord_id}'.`);
-          // Add team name to the member
-          if (team_name) {
-            this.addTeam(guild, member, team_name);
-          }
-        }
+  if(!role) {
+    guild.roles
+      .create({
+        data: {
+          name: team_name,
+          color: '#919191',
+        },
+        reason: 'Adding team.',
       })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    return members;
+      .then((role) => {
+        member.roles.add(role).catch(console.error);
+      })
+      .catch(console.error);
+  } else {
+    member.roles.add(role).catch(console.error);
   }
+}
 
-  /**
-   * Listen to the discord server
-   */
-  listen(): void {
-    this.client.on('error', (error) => {
-      this.handleError(error);
+/**
+ * Retrieves the list of members through a Promise for a Discord Guild. Will need
+ * to callback by ".then((members) => {})" in order to obtain the members.
+ */
+getMemberList(): Promise < Collection < string, GuildMember >> {
+  const guild: Guild = this.client.guilds.cache.get('725834706263867502');
+  return guild.members.fetch();
+}
+
+/**
+ * Finds a discord member and then add's hacker role, change its name, and add
+ * it's team.
+ */
+checkMemberIn(
+  discord_id: string,
+  name: string,
+  team_name ?: string
+): Promise < Collection < string, GuildMember >> {
+  console.log(
+    `Checking '${discord_id}' in with name '${name}' and team_name '${team_name}.'`
+  );
+
+  const guild: Guild = this.client.guilds.cache.get('725834706263867502');
+  const members = guild.members.fetch();
+
+  // Find the member based off of the discord id
+  members
+      .then((members) => {
+    const member: GuildMember = members.find(
+      (member) => member.user.id === discord_id
+    );
+    if (member) {
+      // Check the lenght of the name
+      if (name.length > 32) {
+        const splitName = name.split(' ');
+        const len = splitName.length;
+
+        // Check to see if the First and Last name is still greater than 32
+        if (splitName[0].length + splitName[len - 1].length > 31) {
+          name = `${splitName[0]} ${splitName[len - 1].charAt(0)}.`;
+        } else {
+          name = `${splitName[0]} ${splitName[len - 1]}`;
+        }
+      } else if (name.length < 2) {
+        name = 'Error';
+      }
+
+      console.log(`Setting nickname for '${discord_id}' to '${name}'.`);
+      //Set the nick name of the member
+      member.setNickname(name);
+
+      // Add the hacker role to the member
+      if (!member.roles.cache.has('725846354223693895')) {
+        console.log(`Adding Hacker role to '${discord_id}'.`);
+        member.roles.add('725846354223693895').catch(console.error);
+        member.roles.remove('796165808950476800').catch(console.error);
+      }
+
+      console.log(`Checking Team for '${discord_id}'.`);
+      // Add team name to the member
+      if (team_name) {
+        this.addTeam(guild, member, team_name);
+      }
+    }
+  })
+    .catch((error) => {
+      console.log(error);
     });
 
-    this.client.on('message', (message) => {
-      this.onCommand(message);
-      this.moderateMessage(message);
-    });
+  return members;
+}
 
-    this.client.on('messageUpdate', (oldMessage, newMessage) => {
-      this.moderateMessage(newMessage);
-    });
+/**
+ * Listen to the discord server
+ */
+listen(): void {
+  this.client.on('error', (error) => {
+    this.handleError(error);
+  });
 
-    this.client.on('voiceStateUpdate', async (oldMember, newMember) => {
-      await this.onJoinWaitingRoom(oldMember, newMember);
-      await this.onLeaveWaitingRoom(oldMember, newMember);
-    });
+  this.client.on('message', (message) => {
+    this.onCommand(message);
+    this.moderateMessage(message);
+  });
 
-    this.client.on('messageReactionAdd', (r, user) => {
-      this.onWaitingRoomMessageReact(r, user);
-    });
+  this.client.on('messageUpdate', (oldMessage, newMessage) => {
+    this.moderateMessage(newMessage);
+  });
 
-    this.client.on('guildMemberAdd', (member: GuildMember) => {
-      this.onGuildMemberJoin(member);
-    });
-  }
+  this.client.on('voiceStateUpdate', async (oldMember, newMember) => {
+    await this.onJoinWaitingRoom(oldMember, newMember);
+    await this.onLeaveWaitingRoom(oldMember, newMember);
+  });
+
+  this.client.on('messageReactionAdd', (r, user) => {
+    this.onWaitingRoomMessageReact(r, user);
+  });
+
+  this.client.on('guildMemberAdd', (member: GuildMember) => {
+    this.onGuildMemberJoin(member);
+  });
+}
 }

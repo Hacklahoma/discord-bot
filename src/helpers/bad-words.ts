@@ -4,11 +4,32 @@ import { object } from 'badwords-list';
  * Leet speek alternatives to letters.
  */
  const leetLetters = {
-  a: "4Д",
-  e: "3£€ë",
-  i: "1!|",
-  o: "0Ø",
+  a: "4Д@",
+  b: "d836",
+  c: "k",
+  d: "b6?",
+  e: "3£€&ë",
+  f: "ƒv",
+  g: "&69j",
+  h: "#",
+  i: "1!",
+  j: "1;",
+  k: "c",
+  l: "17|i£",
+  m: "w",
+  n: "И^ท",
+  o: "0Øq",
+  p: "9q",
+  q: "92p",
+  r: "®Я",
+  s: "5z2$",
+  t: "7+",
   u: "vµบ",
+  v: "u",
+  w: "ШЩพ",
+  x: "×*?",
+  y: "j7Ч",
+  z: "2s",
 }
 
 /**
@@ -93,7 +114,7 @@ function createRegexFromWord(word: string) {
   word = word.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&');
 
   //Account for l33t speak
-  return word.replace(/[aeiou]/g, c => `[${c}${leetLetters[c]}]+`);
+  return word.replace(/[abcdefghijklmnopqrstuvwxyz]/g, c => `[${c}${leetLetters[c]}]+`);
 }
 
 /**

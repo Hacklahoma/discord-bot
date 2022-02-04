@@ -83,11 +83,37 @@ const explicitWords: string[] = [
 ];
 
 /**
+ * Creates a RegExp string for a word, 
+ * accounting for punctuation and l33t speak
+ * 
+ * @param word The word to be converted into a RegExp string
+ * @returns A RegExp string for a word
+ */
+function createRegexFromWord(word: string) {
+  //Account for punctuation
+  word = word.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&');
+
+  //Account for l33t speak
+  return word.replace(/[aeiou]/g, c => `[${c}${leetLetters[c]}]+`);
+}
+
+/**
+ * Creates a RegExp string for all words within a list, 
+ * accounting for punctuation l33t speak
+ * 
+ * @param wordList The list of words to be created into a RegExp string
+ * @returns A RegExp string for all words within a list
+ */
+function createRegexList(wordList: string[]) {
+  return "\\b(" + wordList.map(createRegexFromWord).join("|") + ")\\b";
+}
+
+/**
  * RegExp for flagged words
  */
-export const flag = new RegExp("", "ig");
+export const flag = new RegExp(createRegexList(flagWords), "ig");
 
 /**
  * RegExp for explicit words
  */
-export const explicit = new RegExp("", "ig");
+export const explicit = new RegExp(createRegexList(explicitWords), "ig");

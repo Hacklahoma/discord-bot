@@ -90,7 +90,6 @@ const explicitWords = {
  */
 function createRegexFromWord(word: string) {
   //Account for punctuation
-  console.log(word);
   word = word.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&');
 
   //Account for l33t speak

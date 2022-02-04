@@ -153,14 +153,14 @@ export class Bot {
           friendlyKeywords = val;
         }
       }
-      console.log(`Keyword${keywords.length > 1 ? 's' : ''}`, friendlyKeywords)
+      
       // Format message
       const embed = new MessageEmbed()
         .setColor(color)
         .setTitle(title)
         .setDescription(description)
         .addField('Message', message.content)
-        .addField(`Keyword${keywords.length > 1 ? 's' : ''}`, friendlyKeywords) //FIXME
+        .addField(`Keyword${keywords.length > 1 ? 's' : ''}`, friendlyKeywords)
         .setTimestamp();
 
       if (!isExplicit) {

@@ -140,10 +140,7 @@ export class Bot {
         description = `Please review <@${author.id}>'s message in <#${channel.id}>`;
       }
 
-      // Get list of keywords
-      const keywords = Object.keys(isExplicit ? explicit : flag)
-        .filter((val) => message.content.includes(val))
-        .reverse();
+      const keywords = message.content.match(isExplicit ? explicit : flag).reverse();
 
       let friendlyKeywords = '';
       for (const val of keywords) {
@@ -153,7 +150,7 @@ export class Bot {
           friendlyKeywords = val;
         }
       }
-      
+
       // Format message
       const embed = new MessageEmbed()
         .setColor(color)

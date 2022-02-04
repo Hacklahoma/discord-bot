@@ -172,7 +172,7 @@ export class Bot {
     };
 
     // Explicit is found
-    if (this.isProfane(message.content)) {
+    if (this.isProfane(message.content, explicit)) {
       // Delete message
       message.delete();
 
@@ -182,7 +182,7 @@ export class Bot {
     }
 
     // Message to be flagged is found
-    if (this.isProfane(message.content)) {
+    if (this.isProfane(message.content, flag)) {
       // Alert #flagged-messages channel
       sendMessage(false);
       return;
@@ -195,8 +195,9 @@ export class Bot {
    * @param messageText The text to be evaluated.
    * @returns Returns true if the message contains profane content.
    */
-  private isProfane(messageText: string) {
-
+  private isProfane(messageText: string, flagType): boolean {
+    //FIXME: ADD CHECK -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+    
     //Return false if no profanity is found
     return false;
   }

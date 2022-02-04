@@ -140,7 +140,7 @@ export class Bot {
         description = `Please review <@${author.id}>'s message in <#${channel.id}>`;
       }
 
-      const keywords = message.content.match(isExplicit ? explicit : flag).reverse();
+      const keywords = message.content.match(isExplicit ? explicit : flag);
 
       let friendlyKeywords = '';
       for (const val of keywords) {

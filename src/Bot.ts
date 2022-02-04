@@ -153,14 +153,14 @@ export class Bot {
           friendlyKeywords = val;
         }
       }
-
+      console.log(`Keyword${keywords.length > 1 ? 's' : ''}`, friendlyKeywords)
       // Format message
       const embed = new MessageEmbed()
         .setColor(color)
         .setTitle(title)
         .setDescription(description)
         .addField('Message', message.content)
-        .addField(`Keyword${keywords.length > 1 ? 's' : ''}`, friendlyKeywords)
+        .addField(`Keyword${keywords.length > 1 ? 's' : ''}`, friendlyKeywords) //FIXME
         .setTimestamp();
 
       if (!isExplicit) {
@@ -182,6 +182,7 @@ export class Bot {
     }
 
     // Message to be flagged is found
+    
     if (this.isProfane(message.content, flag)) {
       // Alert #flagged-messages channel
       sendMessage(false);

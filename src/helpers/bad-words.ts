@@ -14,7 +14,7 @@ import { object } from 'badwords-list';
 /**
  * Words that will be flagged in discord channel
  */
-const flagWords: string[] = [ ...object, 'wtf', 'lmfao' ];
+const flagWords: string[] = [ ...object.toString(), 'wtf', 'lmfao' ];
 
 /**
  * Words that will be immediately removed

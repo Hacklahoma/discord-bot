@@ -197,7 +197,7 @@ export class Bot {
    */
   private isProfane(messageText: string, flagType: RegExp): boolean {
     //Check if the word contains any explicit content using RegExp
-    if (messageText.search(flagType)) {
+    if (messageText.search(flagType) != -1) {
       return true;
     }
 

@@ -28,7 +28,6 @@
     "axios": "^0.21.1",
     "badwords-list": "^1.0.0",
     "body-parser": "^1.19.0",
-    "censor-sensor": "^1.0.6",
     "cors": "^2.8.5",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",

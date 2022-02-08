@@ -389,7 +389,7 @@ export class Bot {
           member.send(embed);
           console.log(`Sending message to '${member.id}'.`);
         }*/
-        console.log(`'${member.id}' has application linked already.`);
+        /*console.log(`'${member.id}' has application linked already.`);
         const name: string = response.data['name'];
 
         this.checkMemberIn(
@@ -411,7 +411,7 @@ export class Bot {
           )
           .setFooter('Happy hacking!');
         member.send(embed);
-        console.log(`Sending message to '${member.id}'.`);
+        console.log(`Sending message to '${member.id}'.`);*/
       });
 }
 

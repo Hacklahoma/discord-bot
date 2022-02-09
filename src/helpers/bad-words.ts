@@ -71,6 +71,7 @@ const explicitWords = {
   'fellatio': 1,
   'felching': 1,
   'fuck': 1,
+  'fucking': 1,
   'f u c k': 1,
   'flange': 1,
   'Goddamn': 1,

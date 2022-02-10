@@ -182,7 +182,7 @@ function createRegexFromWord(word: string) {
   word = word.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&');
 
   //Account for l33t speak
-  return word.replace(/[abcdefghijklmnopqrstuvwxyz]/g, c => `[${c}${leetLetters[c]}]+`) + /(s?)/;
+  return word.replace(/[abcdefghijklmnopqrstuvwxyz]/g, c => `[${c}${leetLetters[c]}]+`) + "(s?)";
 }
 
 /**

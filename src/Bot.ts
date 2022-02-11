@@ -18,6 +18,7 @@ import { flag, explicit } from './helpers/bad-words';
 import { Command } from './abstracts/Command';
 import { Test } from './commands/Test';
 import { CheckIn } from './commands/CheckIn';
+import { Arrived } from './commands/Arrived';
 import { WalkIn } from './commands/WalkIn';
 import sponsorRooms from './helpers/sponsor-rooms';
 
@@ -51,6 +52,7 @@ export class Bot {
     this.commands.push(new Test());
     this.commands.push(new WalkIn());
     this.commands.push(new CheckIn());
+    this.commands.push(new Arrived());
   }
 
   // Log the bot into the server

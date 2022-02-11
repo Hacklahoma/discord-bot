@@ -94,6 +94,7 @@ export class ExpressServer {
      * Check to see if the user exists in the server
      */
     this.app.get('/check_user/:discord_id', async (req, res) => {
+      console.log("here");
       // Check to see if username and password was given
       if (
         req.body.request_user === process.env.REG_USERNAME &&

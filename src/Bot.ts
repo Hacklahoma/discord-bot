@@ -21,6 +21,7 @@ import { CheckIn } from './commands/CheckIn';
 import { Arrived } from './commands/Arrived';
 import { WalkIn } from './commands/WalkIn';
 import sponsorRooms from './helpers/sponsor-rooms';
+import { OpenCheckIn } from './commands/OpenCheckIn'
 
 type WaitingRoomMeta = {
   memberId: string;
@@ -53,6 +54,7 @@ export class Bot {
     this.commands.push(new WalkIn());
     this.commands.push(new CheckIn());
     this.commands.push(new Arrived());
+    this.commands.push(new OpenCheckIn())
   }
 
   // Log the bot into the server
@@ -371,7 +373,7 @@ export class Bot {
             // Links
             // Links
               const checkInLink = `https://register.hacklahoma.org/accounts/discord/${member.id}/`;
-              const walkInLink = 'https://forms.gle/Qqo1q6UbscC4UYrq8';
+              const walkInLink = 'https://docs.google.com/forms/d/e/1FAIpQLSebPZikk1l07Hnk5Kb5WrmclxXpL6wQY-U8vjW6czi1wqUioQ/viewform';
 
               // Craft embed message and send
               const embed = new MessageEmbed()
@@ -380,7 +382,7 @@ export class Bot {
                   'https://hacklahoma.org/static/media/logo2022.e2bb5577.png',
                   'https://2022.hacklahoma.org'
                 )
-                .setColor('#e43132')
+                .setColor('#01a7c2')
                 .setTitle('Welcome to Hacklahoma 2022!')
                 .setDescription(`Hey <@${member.id}>, we're excited to have you here!`)
                 .addField(

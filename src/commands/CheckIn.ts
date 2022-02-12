@@ -33,7 +33,7 @@ export class CheckIn extends Command {
 
     // Links
     const checkInLink = `https://register.hacklahoma.org/accounts/discord/${id}/`;
-    const walkInLink = 'https://forms.gle/Qqo1q6UbscC4UYrq8';
+    const walkInLink = 'https://docs.google.com/forms/d/e/1FAIpQLSebPZikk1l07Hnk5Kb5WrmclxXpL6wQY-U8vjW6czi1wqUioQ/viewform';
 
     // Craft embed message and send
     const embed = new MessageEmbed()
@@ -42,7 +42,7 @@ export class CheckIn extends Command {
         'https://hacklahoma.org/static/media/logo2022.e2bb5577.png',
         'https://2022.hacklahoma.org'
       )
-      .setColor('#e43132')
+      .setColor('#01a7c2')
       .setTitle('Welcome to Hacklahoma 2022!')
       .setDescription(`Hey <@${id}>, we're excited to have you here!`)
       .addField(

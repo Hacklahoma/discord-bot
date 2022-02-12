@@ -101,8 +101,6 @@ export class Arrived extends Command {
             return;
           }
 
-        
-
           await message.reply(await this.send_reseponse({ discord_id: userID }));
         }
         // Email was used

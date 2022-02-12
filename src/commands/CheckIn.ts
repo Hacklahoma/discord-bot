@@ -39,15 +39,19 @@ export class CheckIn extends Command {
     const embed = new MessageEmbed()
       .setAuthor(
         'Hacklahoma',
-        'https://hacklahoma.org/static/media/logo2021.2851f7a5.png',
-        'https://2021.hacklahoma.org'
+        'https://hacklahoma.org/static/media/logo2022.e2bb5577.png',
+        'https://2022.hacklahoma.org'
       )
-      .setColor('#fe8826')
-      .setTitle('Welcome to Hacklahoma 2021!')
+      .setColor('#e43132')
+      .setTitle('Welcome to Hacklahoma 2022!')
       .setDescription(`Hey <@${id}>, we're excited to have you here!`)
       .addField(
         'How to check in',
         `We first need to find your application that you submitted.\n[Click here to check in](${checkInLink})`
+      )
+      .addField(
+        'For In-Person Hackers!',
+        `If you applied to be in-person, use the same check in link above to make it quicker to get checked in! However when you show up, please find the table with the Hacklahoma team members at the far right to say you have arrived and we'll give you your lanyard!`
       )
       .addField(
         "Didn't apply?",
@@ -55,7 +59,7 @@ export class CheckIn extends Command {
       )
       .addField(
         'Having trouble?',
-        'Please ask for help in the [#check-in-help](https://discord.gg/QURbd28TpE) channel.'
+        'Please ask for help in the [#check-in-help](https://discord.gg/RTZZeMxVFX) channel.'
       )
       .setFooter('Happy hacking!');
     await member.send(embed);

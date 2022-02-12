@@ -348,78 +348,87 @@ export class Bot {
   }
 
   private onGuildMemberJoin(member: GuildMember): void {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const axios = require('axios');
-    axios
-      .get(`${process.env.OURBOROS_DISCORD_DATA}`, {
-        params: {
-          discord_id: member.id,
-          request_user: process.env.REG_USERNAME,
-          request_pass: process.env.REG_PASSWORD,
-        },
-      })
-      .then((response) => {
-        // Unregistered role
-        member.roles.add('796165808950476800');
-        // Check to see if the user has checked in already
-        /*if (response.data === 'no_app') {
-          console.log(`'${member.id}' did not have an application linked yet.`);
-          // Links
-          const checkInLink = `https://register.hacklahoma.org/accounts/discord/${member.id}/`;
-          const walkInLink = 'https://forms.gle/Qqo1q6UbscC4UYrq8';
+    const date = new Date();
 
-          // Craft embed message and send
-          const embed = new MessageEmbed()
-            .setAuthor(
-              'Hacklahoma',
-              'https://hacklahoma.org/static/media/logo2021.2851f7a5.png',
-              'https://2021.hacklahoma.org'
-            )
-            .setColor('#fe8826')
-            .setTitle('Welcome to Hacklahoma 2022!')
-            .setDescription(
-              `Hey <@${member.id}>, we're excited to have you here! This year due to how we are running a hybrid event, we will have different ways to chec`
-            )
-            .addField(
-              'How to check in',
-              `We first need to find your application that you submitted.\n[Click here to check in](${checkInLink})`
-            )
-            .addField(
-              "Didn't apply?",
-              `No problem! We're offering walk-ins this year to a select number of people.\n[Click here to submit a walk-in form](${walkInLink})`
-            )
-            .addField(
-              'Having trouble?',
-              'Please ask for help in the [#check-in-help](https://discord.gg/QURbd28TpE) channel.'
-            )
-            .setFooter('Happy hacking!');
-          member.send(embed);
-          console.log(`Sending message to '${member.id}'.`);
-        }*/
-        /*console.log(`'${member.id}' has application linked already.`);
-        const name: string = response.data['name'];
+    // Unregistered role
+    member.roles.add('796165808950476800');
 
-        this.checkMemberIn(
-          response.data['discord_id'],
-          name,
-          response.data['team_name']
-        );
-        // Craft embed message and send
-        const embed = new MessageEmbed()
-          .setAuthor(
-            'Hacklahoma',
-            'https://hacklahoma.org/static/media/logo2022.e2bb5577.png',
-            'https://2022.hacklahoma.org'
-          )
-          .setColor('#fe8826')
-          .setTitle('Welcome Back to Hacklahoma 2022!')
-          .setDescription(
-            `Hey ${name}, we've managed to obtain your application!`
-          )
-          .setFooter('Happy hacking!');
-        member.send(embed);
-        console.log(`Sending message to '${member.id}'.`);*/
-      });
+    if (date.getUTCDate() >= 12 && date.getUTCHours() >= 14) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const axios = require('axios');
+      axios
+        .get(`${process.env.OURBOROS_DISCORD_DATA}`, {
+          params: {
+            discord_id: member.id,
+            request_user: process.env.REG_USERNAME,
+            request_pass: process.env.REG_PASSWORD,
+          },
+        })
+        .then((response) => {
+          // Check to see if the user has checked in already
+          if (response.data === 'no_app') {
+            console.log(`'${member.id}' did not have an application linked yet.`);
+            // Links
+            // Links
+              const checkInLink = `https://register.hacklahoma.org/accounts/discord/${member.id}/`;
+              const walkInLink = 'https://forms.gle/Qqo1q6UbscC4UYrq8';
+
+              // Craft embed message and send
+              const embed = new MessageEmbed()
+                .setAuthor(
+                  'Hacklahoma',
+                  'https://hacklahoma.org/static/media/logo2022.e2bb5577.png',
+                  'https://2022.hacklahoma.org'
+                )
+                .setColor('#e43132')
+                .setTitle('Welcome to Hacklahoma 2022!')
+                .setDescription(`Hey <@${member.id}>, we're excited to have you here!`)
+                .addField(
+                  'How to check in',
+                  `We first need to find your application that you submitted.\n[Click here to check in](${checkInLink})`
+                )
+                .addField(
+                  'For In-Person Hackers!',
+                  `If you applied to be in-person, use the same check in link above to make it quicker to get checked in! However when you show up, please find the table with the Hacklahoma team members at the far right to say you have arrived and we'll give you your lanyard!`
+                )
+                .addField(
+                  "Didn't apply?",
+                  `No problem! We're offering walk-ins this year to a select number of people.\n[Click here to submit a walk-in form](${walkInLink})`
+                )
+                .addField(
+                  'Having trouble?',
+                  'Please ask for help in the [#check-in-help](https://discord.gg/RTZZeMxVFX) channel.'
+                )
+                .setFooter('Happy hacking!');
+              member.send(embed);
+            console.log(`Sending message to '${member.id}'.`);
+          } else {
+            console.log(`'${member.id}' has application linked already.`);
+            const name: string = response.data['name'];
+
+            this.checkMemberIn(
+              response.data['discord_id'],
+              name,
+              response.data['team_name']
+            );
+            // Craft embed message and send
+            const embed = new MessageEmbed()
+              .setAuthor(
+                'Hacklahoma',
+                'https://hacklahoma.org/static/media/logo2022.e2bb5577.png',
+                'https://2022.hacklahoma.org'
+              )
+              .setColor('#e43132')
+              .setTitle('Welcome Back to Hacklahoma 2022!')
+              .setDescription(
+                `Hey ${name}, we've managed to obtain your application!`
+              )
+              .setFooter('Happy hacking!');
+            member.send(embed);
+            console.log(`Sending message to '${member.id}'.`);
+          }
+        });
+    }
 }
 
   /**

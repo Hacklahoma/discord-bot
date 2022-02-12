@@ -49,6 +49,8 @@ export class OpenCheckIn extends Command {
           'Please ask for help in the [#check-in-help](https://discord.gg/RTZZeMxVFX) channel.'
         )
         .setFooter('Happy hacking!');
+
+        member.send(embed)
     })
 
     return;
